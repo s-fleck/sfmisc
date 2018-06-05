@@ -1,4 +1,4 @@
-# sfmisc utils version 0.0.1
+# sfmisc utils 0.0.1.9000
 
 
 
@@ -32,11 +32,24 @@ assert_namespace <- function(x){
 
 
 
-
 # predicates --------------------------------------------------------------
 
 is_scalar_character <- function(x){
   is.character(x) && is_scalar(x)
+}
+
+
+
+
+is_scalar_logical <- function(x){
+  is.logical(x) && is_scalar(x)
+}
+
+
+
+
+is_scalar_integerish <- function(x){
+  is_scalar(x) && is_integerish(x)
 }
 
 
@@ -49,8 +62,12 @@ is_scalar <- function(x){
 
 
 
-is_flag <- function(x){
-  is.scalar(x) & is.logical(x)
+is_integerish <- function(x){
+  if (!is.numeric(x)){
+    vector("logical", length(x))
+  } else {
+    as.integer(x) == x
+  }
 }
 
 
@@ -66,4 +83,3 @@ is_empty <- function(x){
 is_blank <- function(x){
   trimws(x) == ""
 }
-
