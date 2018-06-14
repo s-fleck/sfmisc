@@ -83,7 +83,6 @@ condition <- function(subclass, message, call = sys.call(-1), ...) {
 
 
 
-#' @rdname condition
 error <- function(subclass, message, call = sys.call(-1), ...) {
   structure(
     class = c(subclass, "error", "condition"),
