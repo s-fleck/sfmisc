@@ -230,3 +230,27 @@ all_are_distinct <- function(
   }
 }
 
+
+
+assert <- function(
+  cond, 
+  ..., 
+  call. = FALSE, 
+  domain = NULL
+){
+  if (identical(cond, TRUE)){
+    return(TRUE)
+  } else if (identical(cond, FALSE)){
+    if (identical(length(list(...)), 0L)){
+      msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
+      stop(msg, call. = call., domain = domain)  
+    } else {
+      stop(..., call. = call., domain = domain)  
+    }
+    
+  } else {
+    stop("Assertion must be either 'TRUE' or 'FALSE'")
+  }
+}
+
+
