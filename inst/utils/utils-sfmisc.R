@@ -232,10 +232,37 @@ all_are_distinct <- function(
 
 
 
+
+#' Assert a condition
+#'
+#' A simpler and more efficient for [base::stopifnot()] that has an easy
+#' mechanism for supplying custom error messages. As opposed to `stopifnot()`,
+#' `assert()` only works with a single (scalar) assertions.
+#'
+#' @param cond `TRUE` or `FALSE` (without any attributes). `FALSE` will throw
+#'   an exception with an automatically constructed error message (if `...`
+#'   was not supplied). Anything else will throw an exception stating that
+#'   `cond` was not valid.
+#' @param ... passed on to [stop()]
+#' @param call. passed on to [stop()]
+#' @param domain passed on to [stop()]
+#'
+#' @noRd
+#'
+#' @return TRUE on success
+#'
+#' @examples
+#'
+#' \dontrun{
+#' assert(1 == 1)
+#' assert(1 == 2)
+#' }
+#'
+#'
 assert <- function(
-  cond, 
-  ..., 
-  call. = FALSE, 
+  cond,
+  ...,
+  call. = FALSE,
   domain = NULL
 ){
   if (identical(cond, TRUE)){
@@ -243,11 +270,11 @@ assert <- function(
   } else if (identical(cond, FALSE)){
     if (identical(length(list(...)), 0L)){
       msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
-      stop(msg, call. = call., domain = domain)  
+      stop(msg, call. = call., domain = domain)
     } else {
-      stop(..., call. = call., domain = domain)  
+      stop(..., call. = call., domain = domain)
     }
-    
+
   } else {
     stop("Assertion must be either 'TRUE' or 'FALSE'")
   }
