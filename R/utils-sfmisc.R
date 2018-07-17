@@ -238,6 +238,30 @@ all_are_distinct <- function(
 
 
 
+#' Assert a condition
+#'
+#' A simpler and more efficient for [base::stopifnot()] that has an easy
+#' mechanism for supplying custom error messages. As opposed to `stopifnot()`,
+#' `assert()` only works with a single (scalar) assertions.
+#'
+#' @param cond `TRUE` (without any attributes). Anything else will throw an
+#'   exception.
+#' @param ... passed on to [stop()]
+#' @param call. passed on to [stop()]
+#' @param domain passed on to [stop()]
+#'
+#' @noRd
+#'
+#' @return TRUE on success
+#'
+#' @examples
+#'
+#' \dontrun{
+#' assert(1 == 1)
+#' assert(1 == 2)
+#' }
+#'
+#'
 assert <- function(
   cond,
   ...,
