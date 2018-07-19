@@ -122,9 +122,9 @@ is_scalar <- function(x){
 
 is_integerish <- function(x){
   if (!is.numeric(x)){
-    vector("logical", length(x))
+    FALSE
   } else {
-    as.integer(x) == x
+    all(as.integer(x) == x)
   }
 }
 
