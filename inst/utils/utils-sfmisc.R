@@ -172,7 +172,7 @@ is_blank <- function(x){
 #' all_are_identical(c(1,1,1))
 #'
 all_are_identical <- function(x, empty_value = FALSE) {
-  assert_that(length(empty_value) <= 1)
+  assert(length(empty_value) <= 1)
 
   if (length(x) > 0L) {
     return(identical(length(unique(x)), 1L))
@@ -210,7 +210,7 @@ all_are_distinct <- function(
   x,
   empty_value = FALSE
 ){
-  assert_that(length(empty_value) <= 1)
+  assert(length(empty_value) <= 1)
 
   if (identical(length(x), 1L)) {
     return(TRUE)
