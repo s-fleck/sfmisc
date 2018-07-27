@@ -4,10 +4,10 @@
 #' @export
 #'
 use_sfmisc <- function(){
-  stopifnot(requireNamespace("rprojroot"))
+  assert(requireNamespace("rprojroot"))
 
   infile <- system.file("utils", "utils-sfmisc.R", package = "sfmisc")
-  stopifnot(file.exists(infile))
+  assert(file.exists(infile))
   outfile  <- rprojroot::find_package_root_file("R", "utils-sfmisc.R")
   current_version <- utils::packageVersion("sfmisc")
 
