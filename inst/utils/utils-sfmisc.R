@@ -21,10 +21,9 @@ walk <- function(.x, .f, ...){
 # assertions --------------------------------------------------------------
 
 assert_namespace <- function(x){
-  stopifnot(requireNamespace(x, quietly = TRUE))
+  assert(requireNamespace(x, quietly = TRUE))
   invisible(TRUE)
 }
-
 
 
 
@@ -90,7 +89,16 @@ error <- function(subclass, message, call = sys.call(-1), ...) {
   )
 }
 
+
+
+
 # predicates --------------------------------------------------------------
+is_scalar <- function(x){
+  identical(length(x), 1L)
+}
+
+
+
 
 is_scalar_character <- function(x){
   is.character(x) && is_scalar(x)
@@ -113,8 +121,15 @@ is_scalar_integerish <- function(x){
 
 
 
-is_scalar <- function(x){
-  identical(length(x), 1L)
+is_tf <- function(x){
+  is.logical(x) && !anyNA(x)
+}
+
+
+
+
+is_scalar_tf <- function(x){
+  identical(x, TRUE) || identical(x, FALSE)
 }
 
 
@@ -149,6 +164,7 @@ is_empty <- function(x){
 is_blank <- function(x){
   trimws(x) == ""
 }
+
 
 
 
@@ -272,12 +288,10 @@ assert <- function(
       msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
       stop(msg, call. = call., domain = domain)
     } else {
-      stop(..., call. = call., domain = domain)
+      suppressWarnings( stop(..., call. = call., domain = domain) )
     }
 
   } else {
     stop("Assertion must be either 'TRUE' or 'FALSE'")
   }
 }
-
-

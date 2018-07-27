@@ -1,4 +1,4 @@
-# sfmisc utils 0.0.1.9004
+# sfmisc utils 0.0.1.9008
 
 
 
@@ -29,7 +29,6 @@ assert_namespace <- function(x){
   assert(requireNamespace(x, quietly = TRUE))
   invisible(TRUE)
 }
-
 
 
 
@@ -95,7 +94,16 @@ error <- function(subclass, message, call = sys.call(-1), ...) {
   )
 }
 
+
+
+
 # predicates --------------------------------------------------------------
+is_scalar <- function(x){
+  identical(length(x), 1L)
+}
+
+
+
 
 is_scalar_character <- function(x){
   is.character(x) && is_scalar(x)
@@ -118,8 +126,15 @@ is_scalar_integerish <- function(x){
 
 
 
-is_scalar <- function(x){
-  identical(length(x), 1L)
+is_tf <- function(x){
+  is.logical(x) && !anyNA(x)
+}
+
+
+
+
+is_scalar_tf <- function(x){
+  is.logical(x) && is_scalar(x) && !is.na(x)
 }
 
 
@@ -127,9 +142,9 @@ is_scalar <- function(x){
 
 is_integerish <- function(x){
   if (!is.numeric(x)){
-    vector("logical", length(x))
+    FALSE
   } else {
-    as.integer(x) == x
+    all(as.integer(x) == x)
   }
 }
 
@@ -154,6 +169,7 @@ is_empty <- function(x){
 is_blank <- function(x){
   trimws(x) == ""
 }
+
 
 
 
@@ -244,8 +260,10 @@ all_are_distinct <- function(
 #' mechanism for supplying custom error messages. As opposed to `stopifnot()`,
 #' `assert()` only works with a single (scalar) assertions.
 #'
-#' @param cond `TRUE` (without any attributes). Anything else will throw an
-#'   exception.
+#' @param cond `TRUE` or `FALSE` (without any attributes). `FALSE` will throw
+#'   an exception with an automatically constructed error message (if `...`
+#'   was not supplied). Anything else will throw an exception stating that
+#'   `cond` was not valid.
 #' @param ... passed on to [stop()]
 #' @param call. passed on to [stop()]
 #' @param domain passed on to [stop()]
@@ -275,7 +293,7 @@ assert <- function(
       msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
       stop(msg, call. = call., domain = domain)
     } else {
-      stop(..., call. = call., domain = domain)
+      suppressWarnings( stop(..., call. = call., domain = domain) )
     }
 
   } else {
