@@ -25,6 +25,56 @@ walk <- function(.x, .f, ...){
 
 # assertions --------------------------------------------------------------
 
+#' Assert a condition
+#'
+#' A simpler and more efficient for [base::stopifnot()] that has an easy
+#' mechanism for supplying custom error messages. As opposed to `stopifnot()`,
+#' `assert()` only works with a single (scalar) assertions.
+#'
+#' @param cond `TRUE` or `FALSE` (without any attributes). `FALSE` will throw
+#'   an exception with an automatically constructed error message (if `...`
+#'   was not supplied). Anything else will throw an exception stating that
+#'   `cond` was not valid.
+#' @param ... passed on to [stop()]
+#' @param call. passed on to [stop()]
+#' @param domain passed on to [stop()]
+#'
+#' @noRd
+#'
+#' @return TRUE on success
+#'
+#' @examples
+#'
+#' \dontrun{
+#' assert(1 == 1)
+#' assert(1 == 2)
+#' }
+#'
+#'
+assert <- function(
+  cond,
+  ...,
+  call. = FALSE,
+  domain = NULL
+){
+  if (identical(cond, TRUE)){
+    return(TRUE)
+  } else if (identical(cond, FALSE)){
+    if (identical(length(list(...)), 0L)){
+      msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
+      stop(msg, call. = call., domain = domain)
+    } else {
+      suppressWarnings( stop(..., call. = call., domain = domain) )
+    }
+
+  } else {
+    stop("Assertion must be either 'TRUE' or 'FALSE'")
+  }
+}
+
+
+
+
 assert_namespace <- function(x){
   assert(requireNamespace(x, quietly = TRUE))
   invisible(TRUE)
@@ -134,7 +184,7 @@ is_tf <- function(x){
 
 
 is_scalar_tf <- function(x){
-  is.logical(x) && is_scalar(x) && !is.na(x)
+  identical(x, TRUE) || identical(x, FALSE)
 }
 
 
@@ -248,55 +298,5 @@ all_are_distinct <- function(
     }
 
     return(empty_value)
-  }
-}
-
-
-
-
-#' Assert a condition
-#'
-#' A simpler and more efficient for [base::stopifnot()] that has an easy
-#' mechanism for supplying custom error messages. As opposed to `stopifnot()`,
-#' `assert()` only works with a single (scalar) assertions.
-#'
-#' @param cond `TRUE` or `FALSE` (without any attributes). `FALSE` will throw
-#'   an exception with an automatically constructed error message (if `...`
-#'   was not supplied). Anything else will throw an exception stating that
-#'   `cond` was not valid.
-#' @param ... passed on to [stop()]
-#' @param call. passed on to [stop()]
-#' @param domain passed on to [stop()]
-#'
-#' @noRd
-#'
-#' @return TRUE on success
-#'
-#' @examples
-#'
-#' \dontrun{
-#' assert(1 == 1)
-#' assert(1 == 2)
-#' }
-#'
-#'
-assert <- function(
-  cond,
-  ...,
-  call. = FALSE,
-  domain = NULL
-){
-  if (identical(cond, TRUE)){
-    return(TRUE)
-  } else if (identical(cond, FALSE)){
-    if (identical(length(list(...)), 0L)){
-      msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
-      stop(msg, call. = call., domain = domain)
-    } else {
-      suppressWarnings( stop(..., call. = call., domain = domain) )
-    }
-
-  } else {
-    stop("Assertion must be either 'TRUE' or 'FALSE'")
   }
 }
