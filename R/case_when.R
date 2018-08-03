@@ -14,7 +14,6 @@
 #'   value of `n` must be consistent across all cases. The case of
 #'   `n == 0` is treated as a variant of `n != 1`.
 #'
-#'   These dots support [tidy dots][rlang::tidy-dots] features.
 #' @export
 #' @return A vector of length 1 or `n`, matching the length of the logical
 #'   input or output vectors, with the type (and attributes) of the first
@@ -62,40 +61,19 @@
 #' )
 #' }
 #'
-#' # case_when is particularly useful inside mutate when you want to
-#' # create a new variable that relies on a complex combination of existing
-#' # variables
-#' starwars %>%
-#'   select(name:mass, gender, species) %>%
-#'   mutate(
-#'     type = case_when(
-#'       height > 200 | mass > 200 ~ "large",
-#'       species == "Droid"        ~ "robot",
-#'       TRUE                      ~  "other"
-#'     )
-#'   )
-#'
-#' # Dots support splicing:
-#' patterns <- list(
-#'   x %% 35 == 0 ~ "fizz buzz",
-#'   x %% 5 == 0 ~ "fizz",
-#'   x %% 7 == 0 ~ "buzz",
-#'   TRUE ~ as.character(x)
+#' dat <- iris[1:5, ]
+#' dat$size<- case_when(
+#'   dat$Sepal.Length < 5.0 ~ "small",
+#'   TRUE ~ "big"
 #' )
-#' case_when(!!!patterns)
-#'
-#'
+#' dat
+
+
+
+
 
 case_when <- function(...) {
-  case_when_list(list(...))
-}
-
-
-
-
-case_when_list <- function(formulas) {
-  assert(is.list(formulas))
-
+  formulas <- list(...)
   n <- length(formulas)
 
   if (n == 0) {
@@ -108,8 +86,8 @@ case_when_list <- function(formulas) {
   for (i in seq_len(n)) {
     f <- formulas[[i]]
     if (!inherits(f, "formula") || length(f) != 3) {
-      non_formula_arg <- substitute(formulas)[[i + 1]]
-      header <- sprintf("Case %s (%s)", i,  fmt_obj1(deparse_trunc(non_formula_arg)))
+      non_formula_arg <- substitute(list(...))[[i + 1]]
+      header <- sprintf("Case %s (%s)", i,  backticks(deparse_trunc(non_formula_arg)))
       stop(header, " must be a two-sided formula, not a ", typeof(f))
     }
 
@@ -117,7 +95,7 @@ case_when_list <- function(formulas) {
 
     query[[i]] <- eval(f[[2]], env)
     if (!is.logical(query[[i]])) {
-      header <- sprintf("LHS of case %s (%s)", i, fmt_obj1(deparse_trunc(f_lhs(f))))
+      header <- sprintf("LHS of case %s (%s)", i, backticks(deparse_trunc(f_lhs(f))))
       stop(header, " must be a logical, not ", typeof(query[[i]]))
     }
 
@@ -139,7 +117,7 @@ case_when_list <- function(formulas) {
       problems <- lhs_problems | rhs_problems
       bad_calls(
         formulas[problems],
-        check_length_val(inconsistent_lengths, m, header = NULL)
+        check_length_val(inconsistent_lengths, m, header = NULL, .stop = identity)
       )
     }
   }
@@ -157,7 +135,7 @@ case_when_list <- function(formulas) {
 
 
 
-fmt_obj1 <- function (x){
+backticks <- function (x){
   paste0("`", x, "`")
 }
 
@@ -176,19 +154,18 @@ f_lhs <- function(x) x[[2]]
 f_rhs <- function(x) x[[3]]
 
 
-bad_calls <- function(calls, ..., .envir = parent.frame()){
-  stop(fmt_calls(calls), ..., .envir = .envir)
+bad_calls <- function(calls, ...){
+  stop(fmt_calls(calls), " ", ...)
 }
 
 
 fmt_calls <- function(...){
-  x <- vapply(..., deparse, "")
+  paste(backticks(vapply(..., deparse, "")), collapse = ", ")
 }
 
 
 
-check_length_val <- function (length_x, n, header, reason = NULL){
-
+check_length_val <- function (length_x, n, header, reason = NULL, .stop = stop){
 
   if (all(length_x %in% c(1L, n))) {
     return()
@@ -198,9 +175,9 @@ check_length_val <- function (length_x, n, header, reason = NULL){
   else
     reason <- paste0(" (", reason, ")")
   if (n == 1) {
-    stop(sprintf("must be length 1%s, not %s", reason, paste(length_x, collapse = ", ")))
+    .stop(sprintf("must be length 1%s, not %s", reason, paste(length_x, collapse = ", ")))
   } else {
-    stop(sprintf("must be length %s%s or one, not %s", n, reason, paste(length_x, collapse = ", ")))
+    .stop(sprintf("must be length %s%s or one, not %s", n, reason, paste(length_x, collapse = ", ")))
   }
 }
 
@@ -236,7 +213,7 @@ check_type <- function (x, template, header)
   if (identical(typeof(x), typeof(template))) {
     return()
   }
-  stop(header, sprintf("must be type %s, not %s", type_of(template), typeof(x)))
+  stop(header, sprintf("must be type %s, not %s", typeof(template), typeof(x)))
 }
 
 
@@ -249,8 +226,7 @@ check_class <- function (x, template, header)
   if (identical(class(x), class(template))) {
     return()
   }
-  stop(header, sprintf("must be type %s, not %s", type_of(template), typeof(x)))
-  glubort(header, "must be %s, not %s", fmt_classes(template), fmt_classes(x))
+  stop(header, sprintf("must be type %s, not %s", typeof(template), typeof(x)))
 }
 
 

@@ -13,7 +13,7 @@ test_that("error messages", {
     case_when(
       paste(50)
     ),
-    "Case 1 (`paste(50)`) must be a two-sided formula, not a string",
+    "Case 1 (`paste(50)`) must be a two-sided formula, not a character",
     fixed = TRUE
   )
 
@@ -127,8 +127,8 @@ test_that("zero-length conditions and values (#3041)", {
 })
 
 test_that("case_when can be used in anonymous functions (#3422)", {
-  res <- tibble(a = 1:3) %>%
-    mutate(b = (function(x) case_when(x < 2 ~ TRUE, TRUE ~ FALSE))(a)) %>%
-    pull()
+  res <- tibble::tibble(a = 1:3) %>%
+    dplyr::mutate(b = (function(x) case_when(x < 2 ~ TRUE, TRUE ~ FALSE))(a)) %>%
+    dplyr::pull()
   expect_equal(res, c(TRUE, FALSE, FALSE))
 })
