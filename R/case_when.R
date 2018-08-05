@@ -68,10 +68,6 @@
 #' )
 #' dat
 
-
-
-
-
 case_when <- function(...) {
   formulas <- list(...)
   n <- length(formulas)
@@ -86,17 +82,24 @@ case_when <- function(...) {
   for (i in seq_len(n)) {
     f <- formulas[[i]]
     if (!inherits(f, "formula") || length(f) != 3) {
-      non_formula_arg <- substitute(list(...))[[i + 1]]
-      header <- sprintf("Case %s (%s)", i,  backticks(deparse_trunc(non_formula_arg)))
-      stop(header, " must be a two-sided formula, not a ", typeof(f))
+      stop(sprintf(
+        "Case %s (`%s`) must be a two-sided formula, not a %s",
+        i,
+        deparse_trunc(substitute(list(...))[[i + 1]]),
+        typeof(f)
+      ))
     }
 
     env <- environment(f)
-
     query[[i]] <- eval(f[[2]], env)
+
     if (!is.logical(query[[i]])) {
-      header <- sprintf("LHS of case %s (%s)", i, backticks(deparse_trunc(f_lhs(f))))
-      stop(header, " must be a logical, not ", typeof(query[[i]]))
+      stop(sprintf(
+        "LHS of case %s (%s) must be a logical, not %s",
+        i,
+        backticks(deparse_trunc(f_lhs(f))),
+        typeof(query[[i]])
+      ))
     }
 
     value[[i]] <- eval(f[[3]], env)
@@ -105,6 +108,7 @@ case_when <- function(...) {
   lhs_lengths <- vapply(query, length, integer(1))
   rhs_lengths <- vapply(value, length, integer(1))
   all_lengths <- unique(c(lhs_lengths, rhs_lengths))
+
   if (length(all_lengths) <= 1) {
     m <- all_lengths[[1]]
   } else {
@@ -135,9 +139,11 @@ case_when <- function(...) {
 
 
 
+
 backticks <- function (x){
   paste0("`", x, "`")
 }
+
 
 
 
@@ -149,14 +155,23 @@ deparse_trunc <- function(x, width = getOption("width")){
 }
 
 
+
+
 f_lhs <- function(x) x[[2]]
 
+
+
+
 f_rhs <- function(x) x[[3]]
+
+
 
 
 bad_calls <- function(calls, ...){
   stop(fmt_calls(calls), " ", ...)
 }
+
+
 
 
 fmt_calls <- function(...){
@@ -165,72 +180,125 @@ fmt_calls <- function(...){
 
 
 
-check_length_val <- function (length_x, n, header, reason = NULL, .stop = stop){
 
-  if (all(length_x %in% c(1L, n))) {
+check_length_val <- function(
+  length_x,
+  n,
+  header,
+  reason = NULL,
+  .stop = stop
+){
+  if (all(length_x %in% c(1L, n)))
     return()
-  }
+
   if (is.null(reason))
     reason <- ""
   else
     reason <- paste0(" (", reason, ")")
+
+  if (is.null(header))
+    header <- ""
+  else
+    header <- paste0(header, " ")
+
+
   if (n == 1) {
-    .stop(sprintf("must be length 1%s, not %s", reason, paste(length_x, collapse = ", ")))
+    .stop(sprintf("%smust be length 1%s, not %s", header, reason, paste(length_x, collapse = ", ")))
   } else {
-    .stop(sprintf("must be length %s%s or one, not %s", n, reason, paste(length_x, collapse = ", ")))
+    .stop(sprintf("%smust be length %s%s or one, not %s", header, n, reason, paste(length_x, collapse = ", ")))
   }
 }
 
 
 
-replace_with <- function (x, i, val, name, reason = NULL)
-{
+
+replace_with <- function (
+  x,
+  i,
+  val,
+  name,
+  reason = NULL
+){
   if (is.null(val)) {
     return(x)
   }
+
   check_length(val, x, name, reason)
   check_type(val, x, name)
   check_class(val, x, name)
+
   i[is.na(i)] <- FALSE
   if (length(val) == 1L) {
     x[i] <- val
-  }
-  else {
+  } else {
     x[i] <- val[i]
   }
   x
 }
 
 
-check_length <- function (x, template, header, reason = NULL)
-{
+
+
+check_length <- function (
+  x,
+  template,
+  header,
+  reason = NULL
+){
   check_length_val(length(x), length(template), header, reason)
 }
 
 
-check_type <- function (x, template, header)
-{
+
+
+check_type <- function(
+  x,
+  template,
+  header
+){
   if (identical(typeof(x), typeof(template))) {
     return()
   }
-  stop(header, sprintf("must be type %s, not %s", typeof(template), typeof(x)))
+
+  if (is.null(header))
+    header <- ""
+  else
+    header <- paste0(header, " ")
+
+  stop(sprintf("%smust be type %s, not %s", header, typeof(template), typeof(x)))
 }
 
 
 
-check_class <- function (x, template, header)
-{
+
+check_class <- function(
+  x,
+  template,
+  header
+){
   if (!is.object(x)) {
     return()
-  }
-  if (identical(class(x), class(template))) {
+
+  } else if (identical(class(x), class(template))) {
     return()
+
+  } else {
+
+    if (is.null(header))
+      header <- ""
+    else
+      header <- paste0(header, " ")
+
+
+    stop(sprintf("%smust be type %s, not %s", header, typeof(template), typeof(x)))
   }
-  stop(header, sprintf("must be type %s, not %s", typeof(template), typeof(x)))
 }
 
 
-fmt_classes <- function (x)
-{
+
+
+fmt_classes <- function(
+  x
+){
   paste(class(x), collapse = "/")
 }
