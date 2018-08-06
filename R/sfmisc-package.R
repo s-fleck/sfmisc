@@ -1,7 +1,5 @@
 #' Private utility functions
 #'
-#' @export case_when
-#' @export if_else
 #' @export compact
 #' @export walk
 #' @export assert
