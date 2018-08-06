@@ -12,9 +12,9 @@ test_that("assert handles custom errors", {
 
   expect_silent(expect_error(assert(FALSE, blah_error)))
 
-  assert(FALSE, blah_error)
-
-
-
+  expect_error(
+    assert(FALSE, blah_error),
+    class = "blah_error"
+  )
 
 })
