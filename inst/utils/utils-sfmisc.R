@@ -295,3 +295,10 @@ all_are_distinct <- function(
     return(empty_value)
   }
 }
+
+
+
+
+n_distinct <- function(x){
+  length(unique(x))
+}
