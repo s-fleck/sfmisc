@@ -2,7 +2,7 @@
 
 #' Paste and Truncate
 #'
-#' @param x a vector of \R objects that can be coerced to character.
+#' @param x a vector
 #' @param width (maximum) width of result
 #' @inheritParams paste
 #'
@@ -27,6 +27,13 @@ ptrunc <- function(
   x[sel] <- strtrim(x[sel], width = width - 4L)
   x[sel] <- paste(gsub(",{0,1}\\s*$", "", x[sel]), "...")
   x
+}
+
+
+
+
+fmt_class <- function(x){
+  paste0("<", paste(x, collapse = "/"), ">")
 }
 
 

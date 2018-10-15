@@ -19,6 +19,4 @@ test_that("utils-sfmisc works as expected", {
     ptrunc(x, width = nchar(x), collapse = NULL),
     x
   )
-
-
 })

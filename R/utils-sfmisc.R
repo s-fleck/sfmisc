@@ -37,6 +37,13 @@ ptrunc <- function(
 
 
 
+fmt_class <- function(x){
+  paste0("<", paste(x, collapse = "/"), ">")
+}
+
+
+
+
 compact <- function(x){
   x[!vapply(x, is.null, FALSE)]
 }
