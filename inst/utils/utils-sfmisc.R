@@ -202,6 +202,10 @@ is_scalar_logical <- function(x){
 
 
 
+is_scalar_atomic <- function(x){
+  is.atomic(x) && is_scalar(x)
+}
+
 
 is_bool <- function(x){
   is.logical(x) && !anyNA(x)
