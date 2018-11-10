@@ -70,8 +70,8 @@ assert <- function(
 
 
 
-assert_namespace <- function(x){
-  res <- vapply(x, requireNamespace, logical(1), quietly = TRUE)
+assert_namespace <- function(...){
+  res <- vapply(c(...), requireNamespace, logical(1), quietly = TRUE)
   if (all(res)){
     return(invsible(TRUE))
   } else {
