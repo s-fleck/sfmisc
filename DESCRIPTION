@@ -1,7 +1,7 @@
 Type: Package
 Package: sfmisc
 Title: Add commonly used utility functions to an R package
-Version: 0.0.1.9010
+Version: 0.0.1.9011
 Authors@R: person("Stefan", "Fleck", email = "stefan.b.fleck@gmail.com", role = c("aut", "cre"))
 Maintainer: Stefan Fleck <stefan.b.fleck@gmail.com>
 Description: Add commonly used utility functions to an R package.
@@ -12,5 +12,5 @@ Suggests:
     testthat
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
