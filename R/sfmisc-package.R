@@ -7,8 +7,8 @@
 #' @export is_scalar_character
 #' @export is_scalar_logical
 #' @export is_scalar_integerish
-#' @export is_scalar_tf
-#' @export is_tf
+#' @export is_scalar_bool
+#' @export is_bool
 #' @export is_integerish
 #' @export is_equal_length
 #' @export is_empty
