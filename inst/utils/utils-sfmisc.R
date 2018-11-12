@@ -42,7 +42,7 @@ fmt_class <- function(x){
 #' @param x any \R object
 #' @param ignore subclasses to ignore
 #' @noRd
-class_fmt <- function(x, ignore){
+class_fmt <- function(x, ignore = NULL){
   fmt_class(setdiff(class(x), ignore))
 }
 
@@ -120,9 +120,20 @@ assert <- function(
 
 
 
-assert_namespace <- function(x){
-  assert(requireNamespace(x, quietly = TRUE))
-  invisible(TRUE)
+assert_namespace <- function(...){
+  res <- vapply(c(...), requireNamespace, logical(1), quietly = TRUE)
+  if (all(res)){
+    return(invsible(TRUE))
+  } else {
+    stop(sprintf(
+      paste(
+        "This function requires the packages %s. You can install them with",
+        "`install.packages(%s)`."
+      ),
+      paste(names(res)[!res], collapse = ", "),
+      deparse(names(res))
+    ))
+  }
 }
 
 
