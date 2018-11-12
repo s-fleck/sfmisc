@@ -39,6 +39,17 @@ fmt_class <- function(x){
 
 
 
+#' @param x any \R object
+#' @param ignore subclasses to ignore
+#' @noRd
+class_fmt <- function(x, ignore){
+  fmt_class(setdiff(class(x), ignore))
+}
+
+
+
+
+
 compact <- function(x){
   x[!vapply(x, is.null, FALSE)]
 }

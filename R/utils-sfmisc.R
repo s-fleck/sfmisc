@@ -1,4 +1,4 @@
-# sfmisc utils 0.0.1.9014
+# sfmisc utils 0.0.1.9016
 
 
 
@@ -206,6 +206,10 @@ is_scalar_logical <- function(x){
 }
 
 
+
+is_scalar_atomic <- function(x){
+  is.atomic(x) && is_scalar(x)
+}
 
 
 is_bool <- function(x){
