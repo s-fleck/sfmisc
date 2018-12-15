@@ -1,5 +1,9 @@
 # utils -------------------------------------------------------------------
 
+# nocov start
+# commonly used utility functions included from the package sfmisc
+
+
 #' Paste and Truncate
 #'
 #' @param x a vector
@@ -125,14 +129,25 @@ assert_namespace <- function(...){
   if (all(res)){
     return(invsible(TRUE))
   } else {
-    stop(sprintf(
-      paste(
-        "This function requires the packages %s. You can install them with",
-        "`install.packages(%s)`."
-      ),
-      paste(names(res)[!res], collapse = ", "),
-      deparse(names(res))
-    ))
+    pkgs <- c(...)
+
+    if (identical(length(pkgs), 1L)){
+      msg <- sprintf(paste(
+        "This function requires the package '%s'. You can install it with",
+        '`install.packages("%s")`.'), pkgs, pkgs
+      )
+    } else {
+      msg <- sprintf(
+        paste(
+          "This function requires the packages %s. You can install them with",
+          "`install.packages(%s)`."
+        ),
+        paste(names(res)[!res], collapse = ", "),
+        deparse(names(res))
+      )
+    }
+
+    stop(msg)
   }
 }
 
@@ -405,3 +420,5 @@ all_are_distinct <- function(
 n_distinct <- function(x){
   length(unique(x))
 }
+
+# nocov end
