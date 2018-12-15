@@ -1,9 +1,13 @@
-# sfmisc utils 0.0.1.9018
+# sfmisc utils 0.0.1.9020
 
 
 
 
 # utils -------------------------------------------------------------------
+
+# nocov start
+# commonly used utility functions included from the package sfmisc
+
 
 #' Paste and Truncate
 #'
@@ -50,7 +54,6 @@ fmt_class <- function(x){
 class_fmt <- function(x, ignore = NULL){
   fmt_class(setdiff(class(x), ignore))
 }
-
 
 
 
@@ -128,10 +131,10 @@ assert <- function(
 assert_namespace <- function(...){
   res <- vapply(c(...), requireNamespace, logical(1), quietly = TRUE)
   if (all(res)){
-    return(invsible(TRUE))
+    return(invisible(TRUE))
+
   } else {
     pkgs <- c(...)
-
     if (identical(length(pkgs), 1L)){
       msg <- sprintf(paste(
         "This function requires the package '%s'. You can install it with",
@@ -147,9 +150,9 @@ assert_namespace <- function(...){
         deparse(names(res))
       )
     }
-
-    stop(msg)
   }
+
+  stop(msg)
 }
 
 
@@ -227,8 +230,8 @@ is_scalar <- function(x){
 
 
 
-is_scalar_character <- function(x){
-  is.character(x) && is_scalar(x)
+is_scalar_atomic <- function(x){
+  is.atomic(x) && is_scalar(x)
 }
 
 
@@ -240,9 +243,40 @@ is_scalar_logical <- function(x){
 
 
 
-is_scalar_atomic <- function(x){
-  is.atomic(x) && is_scalar(x)
+
+is_scalar_integer <- function(x){
+  is.integer(x) && is_scalar(x)
 }
+
+
+
+
+is_scalar_factor <- function(x){
+  is.factor(x) && is_scalar(x)
+}
+
+
+
+
+is_scalar_list <- function(x){
+  is.list(x) && is_scalar(x)
+}
+
+
+
+
+is_scalar_numeric <- function(x){
+  is.numeric(x) && is_scalar(x)
+}
+
+
+
+
+is_scalar_character <- function(x){
+  is.character(x) && is_scalar(x)
+}
+
+
 
 
 is_bool <- function(x){
@@ -421,3 +455,8 @@ all_are_distinct <- function(
 n_distinct <- function(x){
   length(unique(x))
 }
+
+
+
+
+# nocov end
