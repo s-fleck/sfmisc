@@ -20,3 +20,17 @@ test_that("utils-sfmisc works as expected", {
     x
   )
 })
+
+
+
+test_that("assert_namespace works as expected", {
+  expect_error(
+    assert_namespace("blubb", "schwupp"),
+    'packages.*them.*install\\.packages\\(c\\("blubb", "schwupp"\\)\\)'
+  )
+
+  expect_error(
+    assert_namespace("blubb"),
+    'package.*it.*install\\.packages\\("blubb"\\)'
+  )
+})
