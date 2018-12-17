@@ -416,7 +416,7 @@ pad_left <- function(
   width = max(nchar(paste(x))),
   pad = " "
 ){
-  diff <- width - nchar(paste(x))
+  diff <- pmax(width - nchar(paste(x)), 0L)
   padding <-
     vapply(diff, function(i) paste(rep.int(pad, i), collapse = ""), character(1))
   paste0(padding, x)
@@ -430,7 +430,7 @@ pad_right <- function(
   width = max(nchar(paste(x))),
   pad = " "
 ){
-  diff <- width - nchar(paste(x))
+  diff <- pmax(width - nchar(paste(x)), 0L)
   padding <-
     vapply(diff, function(i) paste(rep.int(pad, i), collapse = ""), character(1))
   paste0(x, padding)
