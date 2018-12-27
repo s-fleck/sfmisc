@@ -8,6 +8,7 @@
 #'
 #' @param x a vector
 #' @param width (maximum) width of result
+#' @param dots `character` scalar. String to use for ellipses
 #' @inheritParams paste
 #'
 #' @return a `character` scalar
@@ -21,7 +22,8 @@ ptrunc <- function(
   ...,
   width = 40L,
   sep = ", ",
-  collapse = ", "
+  collapse = ", ",
+  dots = " ..."
 ){
   assert(width > 7L, "The minimum supported width is 8")
   x <- paste(..., sep = sep, collapse = collapse)
@@ -29,7 +31,7 @@ ptrunc <- function(
   sel <- vapply(x, nchar, integer(1), USE.NAMES = FALSE) > width
 
   x[sel] <- strtrim(x[sel], width = width - 4L)
-  x[sel] <- paste(gsub(",{0,1}\\s*$", "", x[sel]), "...")
+  x[sel] <- paste0(gsub(",{0,1}\\s*$", "", x[sel]), dots)
   x
 }
 
