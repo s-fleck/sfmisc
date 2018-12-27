@@ -370,6 +370,26 @@ is_blank <- function(x){
 
 # all_are -----------------------------------------------------------------
 
+#' Convert vector if identical elements to scalar
+#'
+#' Returns `unique(x)` if all elements of `x` are identical, throws an error if
+#' not.
+#'
+#' @inheritParams all_are_identical
+#'
+#' @return A scalar of the same type as `x`
+#' @noRd
+as_scalar <- function(x){
+  res <- unique(x)
+  if (is_scalar(res)){
+    return(res)
+  } else {
+    stop("Not all elements of x are identical")
+  }
+}
+
+
+
 
 #' Test if all elements of a vector are identical
 #'
