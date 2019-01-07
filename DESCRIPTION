@@ -1,10 +1,11 @@
 Type: Package
 Package: sfmisc
 Title: Add commonly used utility functions to an R package
-Version: 0.0.1.9023
+Version: 0.0.1.9024
 Authors@R: person("Stefan", "Fleck", email = "stefan.b.fleck@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3344-9851"))
 Maintainer: Stefan Fleck <stefan.b.fleck@gmail.com>
-Description: Add commonly used utility functions to an R package.
+Description: Commonly used utility functions without dependencies that can 
+  easily be embedded in R packages.
 License: MIT + file LICENSE
 Suggests: 
     rprojroot,

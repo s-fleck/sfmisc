@@ -227,6 +227,13 @@ is_scalar <- function(x){
 
 
 
+is_scalar_list <- function(x){
+  is_list(x) && is_scalar(x)
+}
+
+
+
+
 is_scalar_atomic <- function(x){
   is.atomic(x) && is_scalar(x)
 }
@@ -271,6 +278,12 @@ is_scalar_numeric <- function(x){
 
 is_scalar_character <- function(x){
   is.character(x) && is_scalar(x)
+}
+
+
+
+is_vector <- function(x){
+  is.atomic(x) || is.list(x)
 }
 
 
@@ -501,6 +514,40 @@ pad_right <- function(
   padding <-
     vapply(diff, function(i) paste(rep.int(pad, i), collapse = ""), character(1))
   paste0(x, padding)
+}
+
+
+
+
+`%||%` <- function(x, y){
+  if (is.null(x))
+    y
+  else (x)
+}
+
+
+
+preview_object <- function(
+  x,
+  width = 32,
+  brackets = c("(", ")"),
+  quotes   = c("`", "`"),
+  dots = ".."
+){
+  if (!is.atomic(x))
+    return(class_fmt(x))
+
+  if (is.numeric(x))
+    x <- format(x, justify = "none", drop0trailing = TRUE, trim = TRUE)
+
+  res <- ptrunc(x, collapse = ", ", width = width, dots = dots)
+
+  if (length(x) > 1)
+    res <- paste0(brackets[[1]], res, brackets[[2]])
+  else
+    res <- paste0(quotes[[1]], res, quotes[[2]])
+
+  res
 }
 
 # nocov end
