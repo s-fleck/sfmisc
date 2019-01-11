@@ -282,6 +282,7 @@ is_scalar_character <- function(x){
 
 
 
+
 is_vector <- function(x){
   is.atomic(x) || is.list(x)
 }
@@ -332,6 +333,20 @@ is_integerish <- function(x){
 
 is_scalar_integerish <- function(x){
   is_scalar(x) && is_integerish(x)
+}
+
+
+
+
+is_n <- function(x){
+  is_scalar_integerish(x) && identical(x > 0, TRUE)
+}
+
+
+
+
+is_n0 <- function(x){
+  is_scalar_integerish(x) && identical(x >= 0, TRUE)
 }
 
 
@@ -488,6 +503,7 @@ n_distinct <- function(x){
 
 
 
+
 # misc --------------------------------------------------------------------
 
 
@@ -527,6 +543,7 @@ pad_right <- function(
 
 
 
+
 preview_object <- function(
   x,
   width = 32,
@@ -549,5 +566,8 @@ preview_object <- function(
 
   res
 }
+
+
+
 
 # nocov end

@@ -1,4 +1,4 @@
-# sfmisc utils 0.0.1.9024
+# sfmisc utils 0.0.1.9025
 
 
 
@@ -337,6 +337,12 @@ is_integerish <- function(x){
 
 is_scalar_integerish <- function(x){
   is_scalar(x) && is_integerish(x)
+}
+
+
+
+is_n <- function(x){
+  is_scalar_integerish(x) && identical(x >= 0, TRUE)
 }
 
 
