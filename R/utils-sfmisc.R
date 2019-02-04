@@ -225,6 +225,20 @@ error <- function(subclass, message, call = sys.call(-1), ...) {
 
 
 # predicates --------------------------------------------------------------
+is_error <- function(x){
+  inherits(x, "error")
+}
+
+
+
+
+is_try_error <- function(x){
+  inherits(x, "try-error")
+}
+
+
+
+
 is_scalar <- function(x){
   identical(length(x), 1L)
 }
@@ -472,7 +486,7 @@ is_candidate_key <- function(x){
 #' equalish(a - b, 0.5)
 #'
 equalish <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
-  assert_that(identical(length(tolerance), 1L) && is.numeric(tolerance))
+  assert(is_scalar_numeric(tolerance) && tolerance >= 0)
   abs(x - y) < tolerance
 }
 
@@ -481,7 +495,7 @@ equalish <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
 
 #' @return `equalish_frac()` returns `TRUE` if the relative difference between
 #'   `x` and `y` is smaller than `tolerance`. The relative difference is
-#'   calculated as `abs(x - y) / pmax(abs(x), abs(y))`. If both `x` and `y` are
+#'   defined as `abs(x - y) / pmax(abs(x), abs(y))`. If both `x` and `y` are
 #'   `0` the relative difference is not defined, but this function will still
 #'   return `TRUE`.
 #'
@@ -493,6 +507,7 @@ equalish <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
 #' equalish_frac(0, 0)
 #'
 equalish_frac <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
+  assert(is_scalar_numeric(tolerance) && tolerance >= 0)
   res <- abs(x - y) / pmax(abs(x), abs(y)) < tolerance
   res[x == 0 & y == 0] <- TRUE
   res
