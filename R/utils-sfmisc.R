@@ -1,4 +1,4 @@
-# sfmisc utils 0.0.1.9025
+# sfmisc utils 0.0.1.9026
 
 
 
@@ -287,6 +287,7 @@ is_scalar_character <- function(x){
 
 
 
+
 is_vector <- function(x){
   is.atomic(x) || is.list(x)
 }
@@ -341,7 +342,15 @@ is_scalar_integerish <- function(x){
 
 
 
+
 is_n <- function(x){
+  is_scalar_integerish(x) && identical(x > 0, TRUE)
+}
+
+
+
+
+is_n0 <- function(x){
   is_scalar_integerish(x) && identical(x >= 0, TRUE)
 }
 
@@ -387,6 +396,106 @@ is_empty <- function(x){
 #'
 is_blank <- function(x){
   trimws(x) == ""
+}
+
+
+
+
+#' Test if a Vector or Combination of Vectors is a Candidate Key
+#'
+#' Checks if all elements of the atomic vector `x`, or the combination of
+#' all elements of `x` if `x` is a `list`, are unique and neither `NA` or
+#' `infinite`.
+#'
+#' @param x a atomic vector or a list of atomic vectors
+#'
+#' @return `TRUE/FALSE`
+#' @noRd
+#'
+#' @examples
+#'
+#' is_candidate_key(c(1, 2, 3))
+#' is_candidate_key(c(1, 2, NA))
+#' is_candidate_key(c(1, 2, Inf))
+#'
+#' td <- data.frame(
+#'   x = 1:10,
+#'   y = 1:2,
+#'   z = 1:5
+#' )
+#'
+#' is_candidate_key(list(td$x, td$z))
+#' # a data.frame is just a special list
+#' is_candidate_key(td[, c("y", "z")])
+is_candidate_key <- function(x){
+
+  if (is.atomic(x)){
+    # !is.infinite instead of is.finite because x can be a character vector
+    length(x) > 1 &&
+    all(!is.infinite(x)) &&
+    !any(is.na(x)) &&
+    identical(length(unique(x)), length(x))
+  } else if (is.list(x)){
+    length(x) > 0 &&
+    length(x[[1]] > 0) &&
+    do.call(is_equal_length, x) &&
+    all(vapply(x, function(.x) all(!is.infinite(.x)), logical(1))) &&
+    all(vapply(x, function(.x) !any(is.na(.x)), logical(1))) &&
+    !any(duplicated(as.data.frame(x)))
+  }
+}
+
+
+
+
+# equalish ----------------------------------------------------------------
+
+#' Check for equality within a tolerance level
+#'
+#'
+#'
+#' @param x,y `numeric` vectors
+#' @param tolerance `numeric` scalar. tolerance level (absolute value). Defaults
+#'   to `.Machine$double.eps^0.5` which is a sensible default for comparing
+#'   floating point numbers.
+#'
+#' @return `equalish()` returns TRUE if the absolute difference between `x` and
+#'   `y` is less than `tolerance`.
+#' @noRd
+#' @seealso [.Machine]
+#'
+#'
+#' @examples
+#' a <- 0.7
+#' b <- 0.2
+#' a - b == 0.5
+#' equalish(a - b, 0.5)
+#'
+equalish <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
+  assert_that(identical(length(tolerance), 1L) && is.numeric(tolerance))
+  abs(x - y) < tolerance
+}
+
+
+
+
+#' @return `equalish_frac()` returns `TRUE` if the relative difference between
+#'   `x` and `y` is smaller than `tolerance`. The relative difference is
+#'   calculated as `abs(x - y) / pmax(abs(x), abs(y))`. If both `x` and `y` are
+#'   `0` the relative difference is not defined, but this function will still
+#'   return `TRUE`.
+#'
+#' @noRd
+#' @examples
+#'
+#' equalish_frac(1000, 1010, tolerance = 0.01)
+#' equalish_frac(1000, 1010, tolerance = 0.009)
+#' equalish_frac(0, 0)
+#'
+equalish_frac <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
+  res <- abs(x - y) / pmax(abs(x), abs(y)) < tolerance
+  res[x == 0 & y == 0] <- TRUE
+  res
 }
 
 
@@ -499,6 +608,7 @@ n_distinct <- function(x){
 
 
 
+
 # misc --------------------------------------------------------------------
 
 
@@ -538,6 +648,7 @@ pad_right <- function(
 
 
 
+
 preview_object <- function(
   x,
   width = 32,
@@ -560,5 +671,8 @@ preview_object <- function(
 
   res
 }
+
+
+
 
 # nocov end

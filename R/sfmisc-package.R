@@ -15,6 +15,9 @@
 #' @export is_blank
 #' @export all_are_identical
 #' @export all_are_distinct
+#' @export is_candidate_key
+#' @export equalish
+#' @export equalish_frac
 #'
 #' @keywords internal
 "_PACKAGE"
