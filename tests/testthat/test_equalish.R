@@ -1,3 +1,5 @@
+context("equalish")
+
 
 test_that("is_equalish works as expected", {
   a <- 0.58
@@ -36,6 +38,4 @@ test_that("equalish_frac works as expected", {
     equalish_frac(c(10, 11, NA), c(10, 8,  NA)),
     c(TRUE, FALSE, NA)
   )
-
-
 })

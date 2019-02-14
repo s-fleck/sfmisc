@@ -1,3 +1,4 @@
+context("assert")
 
 test_that("assert handles custom errors", {
 

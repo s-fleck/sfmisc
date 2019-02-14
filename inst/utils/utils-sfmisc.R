@@ -457,6 +457,25 @@ is_candidate_key <- function(x){
 
 
 
+
+
+# https://modern-sql.com/feature/is-distinct-from
+is_not_distinct_from <- function(x, y){
+  ((x == y) & !is.na(x) & !is.na(y)) | (is.na(x) & is.na(y))
+}
+
+
+
+
+is_distinct_from <- function(x, y){
+  ((x != y) & !is.na(x) & !is.na(y)) | (is.na(x) != is.na(y))
+}
+
+
+
+
+
+
 # equalish ----------------------------------------------------------------
 
 #' Check for equality within a tolerance level

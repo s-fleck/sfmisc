@@ -1,4 +1,4 @@
-# sfmisc utils 0.0.1.9026
+# sfmisc utils 0.0.1.9027
 
 
 
@@ -457,6 +457,21 @@ is_candidate_key <- function(x){
     all(vapply(x, function(.x) !any(is.na(.x)), logical(1))) &&
     !any(duplicated(as.data.frame(x)))
   }
+}
+
+
+
+
+# https://modern-sql.com/feature/is-distinct-from
+is_not_distinct_from <- function(x, y){
+  ((x == y) & !is.na(x) & !is.na(y)) | (is.na(x) & is.na(y))
+}
+
+
+
+
+is_distinct_from <- function(x, y){
+  ((x != y) & !is.na(x) & !is.na(y)) | (is.na(x) != is.na(y))
 }
 
 

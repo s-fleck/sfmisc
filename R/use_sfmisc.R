@@ -6,6 +6,16 @@
 use_sfmisc <- function(){
   stopifnot(requireNamespace("rprojroot"))
 
+  get_sfmisc_version <- function(x){
+    txt <- readLines(x)
+
+    if (length(txt) > 0){
+      regmatches(txt[[1]], regexpr("(\\d\\.\\d\\.\\d$)|(\\d\\.\\d\\.\\d\\.\\d*$)", txt[[1]]))
+    } else {
+      "*.*.*"
+    }
+  }
+
   infile <- system.file("utils", "utils-sfmisc.R", package = "sfmisc")
   stopifnot(file.exists(infile))
   outfile  <- rprojroot::find_package_root_file("R", "utils-sfmisc.R")
@@ -36,17 +46,4 @@ use_sfmisc <- function(){
 
 
   file.append(outfile, infile)
-}
-
-
-
-get_sfmisc_version <- function(x){
-  txt <- readLines(x)
-
-  if (length(txt) > 0){
-    regmatches(txt[[1]], regexpr("(\\d\\.\\d\\.\\d$)|(\\d\\.\\d\\.\\d\\.\\d*$)", txt[[1]]))
-  } else {
-    "*.*.*"
-  }
-
 }
