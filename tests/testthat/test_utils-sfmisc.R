@@ -34,3 +34,25 @@ test_that("assert_namespace works as expected", {
     'package.*it.*install\\.packages\\("blubb"\\)'
   )
 })
+
+
+
+
+
+test_that("assert_namespace works as expected", {
+
+  expect_true(is_POSIXct(Sys.time()))
+  expect_true(is_scalar_POSIXct(Sys.time()))
+  expect_true(is_scalar_POSIXt(Sys.time()))
+  expect_false(is_scalar_POSIXlt(Sys.time()))
+
+  lt <- as.POSIXlt(Sys.time())
+  expect_true(is_POSIXlt(c(lt, lt)))
+  expect_true(is_scalar_POSIXlt(lt))
+  expect_true(is_scalar_POSIXt(lt))
+  expect_false(is_scalar_POSIXct(lt))
+
+  expect_true(is_Date(Sys.Date()))
+  expect_true(is_scalar_Date(Sys.Date()))
+
+})

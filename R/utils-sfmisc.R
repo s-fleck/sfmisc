@@ -1,4 +1,4 @@
-# sfmisc utils 0.0.1.9027
+# sfmisc utils 0.0.1.9028
 
 
 
@@ -225,6 +225,9 @@ error <- function(subclass, message, call = sys.call(-1), ...) {
 
 
 # predicates --------------------------------------------------------------
+
+
+
 is_error <- function(x){
   inherits(x, "error")
 }
@@ -241,6 +244,62 @@ is_try_error <- function(x){
 
 is_scalar <- function(x){
   identical(length(x), 1L)
+}
+
+
+
+
+is_POSIXct <- function(x){
+  inherits(x, "POSIXct")
+}
+
+
+
+
+is_scalar_POSIXct <- function(x){
+  is_POSIXct(x) && is_scalar(x)
+}
+
+
+
+
+is_POSIXlt <- function(x){
+  inherits(x, "POSIXlt")
+}
+
+
+
+
+is_scalar_POSIXlt <- function(x){
+  is_POSIXlt(x) && is_scalar(x)
+}
+
+
+
+
+is_POSIXt <- function(x){
+  inherits(x, "POSIXt")
+}
+
+
+
+
+is_scalar_POSIXt <- function(x){
+  is_POSIXt(x) && is_scalar(x)
+}
+
+
+
+
+is_Date <- function(x){
+  inherits(x, "Date")
+}
+
+
+
+
+is_scalar_Date <- function(x){
+  is_Date(x) && is_scalar(x)
 }
 
 
