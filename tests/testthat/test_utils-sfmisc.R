@@ -1,7 +1,11 @@
 context("utils-sfmisc")
 
 
-test_that("utils-sfmisc works as expected", {
+
+
+# utils -------------------------------------------------------------------
+
+test_that("prtunc works as expected", {
 
   x <- "racecar carrace"
 
@@ -23,6 +27,9 @@ test_that("utils-sfmisc works as expected", {
 
 
 
+
+# assertions --------------------------------------------------------------
+
 test_that("assert_namespace works as expected", {
   expect_error(
     assert_namespace("blubb", "schwupp"),
@@ -38,8 +45,9 @@ test_that("assert_namespace works as expected", {
 
 
 
+# predicates --------------------------------------------------------------
 
-test_that("assert_namespace works as expected", {
+test_that("is_POSIXct and co work as expected", {
 
   expect_true(is_POSIXct(Sys.time()))
   expect_true(is_scalar_POSIXct(Sys.time()))
@@ -55,4 +63,49 @@ test_that("assert_namespace works as expected", {
   expect_true(is_Date(Sys.Date()))
   expect_true(is_scalar_Date(Sys.Date()))
 
+})
+
+
+
+
+test_that("is_windows_path works as expected", {
+  expect_identical(
+    is_windows_path(c(
+      "d:",
+      "C:\\Program Files",
+      "c:\\Program Files",
+      "c",
+      "/home/foobar",
+      "/")
+    ),
+    c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE)
+  )
+})
+
+
+
+
+# misc --------------------------------------------------------------------
+
+test_that("path_tidy works as expected", {
+  expect_identical(
+    path_tidy(c(
+      "c:\\Program Files",
+      "~/rpkgs",
+      "~/rpkgs/",
+      "//foo/bar/",
+      "//foo///bar/",
+      "c:",
+      "/"
+    )),
+    c(
+      "C:/Program Files",
+      "~/rpkgs",
+      "~/rpkgs",
+      "//foo/bar",
+      "//foo/bar",
+      "C:/",
+      "/"
+    )
+  )
 })
