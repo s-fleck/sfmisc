@@ -14,7 +14,7 @@
 #' @return a `character` scalar
 #' @noRd
 #'
-#' @example
+#' @examples
 #'   ptrunc(month.abb)
 #'   ptrunc(month.abb, month.name)
 #'
