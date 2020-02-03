@@ -37,10 +37,19 @@ test_that("assert_namespace works as expected", {
   )
 
   expect_error(
-    assert_namespace("blubb"),
+    assert_namespace("stats", "blubb"),
     'package.*it.*install\\.packages\\("blubb"\\)'
   )
+
+  expect_error(
+    assert_namespace("stats", c("blubb", "schwupp")),
+    'package.*it.*c(.*blubb.*, .*schwupp.*)'
+  )
+
 })
+
+
+
 
 
 

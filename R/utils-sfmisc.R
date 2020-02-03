@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.0
+# sfmisc utils 1.0.0.9031
 
 
 
@@ -131,16 +131,19 @@ assert <- function(
 
 
 assert_namespace <- function(...){
-  res <- vapply(c(...), requireNamespace, logical(1), quietly = TRUE)
+  pkgs <- c(...)
+
+  res <- vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)
   if (all(res)){
     return(invisible(TRUE))
 
   } else {
-    pkgs <- c(...)
-    if (identical(length(pkgs), 1L)){
+    miss <- pkgs[!res]
+
+    if (identical(length(miss), 1L)){
       msg <- sprintf(paste(
         "This function requires the package '%s'. You can install it with",
-        '`install.packages("%s")`.'), pkgs, pkgs
+        '`install.packages("%s")`.'), miss, miss
       )
     } else {
       msg <- sprintf(
@@ -148,13 +151,13 @@ assert_namespace <- function(...){
           "This function requires the packages %s. You can install them with",
           "`install.packages(%s)`."
         ),
-        paste(names(res)[!res], collapse = ", "),
-        deparse(names(res))
+        paste(miss, collapse = ", "),
+        paste0("c(", paste(paste0('\"', miss, '\"'), collapse = ", "), ")")
       )
     }
   }
 
-  stop(msg)
+  stop(msg, call. = FALSE)
 }
 
 
