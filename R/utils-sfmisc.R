@@ -43,8 +43,8 @@ ptrunc <- function(
 
 
 
-fmt_class <- function(x){
-  paste0("<", paste(x, collapse = "/"), ">")
+fmt_class <- function(x, open = "<", close = ">"){
+  paste0(open, paste(x, collapse = "/"), close)
 }
 
 
@@ -690,6 +690,24 @@ preview_object <- function(
   quotes   = c("`", "`"),
   dots = ".."
 ){
+  if (is.function(x)){
+    fmls <- names(formals(x))
+    len_fmls <- length(fmls)
+
+    if (len_fmls > 4){
+      fmls <- fmls[1:4]
+      fmls_fmt <- paste(fmls, collapse = ", ")
+      fmls_fmt <- paste0(fmls_fmt, ", +", len_fmls - length(fmls), "")
+    } else {
+      fmls_fmt <- paste(fmls, collapse = ", ")
+    }
+    return(fmt_class(paste(
+      fmt_class(class(x), open = "", close = ""), "(", fmls_fmt, ")",
+      sep = ""
+    )))
+  }
+
+
   if (!is.atomic(x))
     return(class_fmt(x))
 
