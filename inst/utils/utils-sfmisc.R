@@ -722,6 +722,32 @@ preview_object <- function(
 
 
 
+#' Collapse text vectors with a comma
+#'
+#' @param x `character` vector
+#'
+#' @return a `character` scalar
+#' @noRd
+comma <- function(..., collapse = ", "){
+  paste(unlist(c(...)), collapse = collapse)
+}
+
+
+
+
+#' Collapse text vectors with a comma (no duplicates)
+#'
+#' @param x `character` vector
+#'
+#' @return a `character` scalar
+#' @noRd
+commaset <- function(..., collapse = ", "){
+  paste(sort(unique(unlist(c(...)))), collapse = collapse)
+}
+
+
+
+
 #' Clean up paths to make them comparable, inspired by fs::path_tidy
 #'
 #' @param x `character` vector

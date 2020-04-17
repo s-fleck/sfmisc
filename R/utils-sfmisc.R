@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.0.9031
+# sfmisc utils 1.0.0.9033
 
 
 
@@ -722,6 +722,32 @@ preview_object <- function(
     res <- paste0(quotes[[1]], res, quotes[[2]])
 
   res
+}
+
+
+
+
+#' Collapse text vectors with a comma
+#'
+#' @param x `character` vector
+#'
+#' @return a `character` scalar
+#' @noRd
+comma <- function(..., collapse = ", "){
+  paste(unlist(c(...)), collapse = collapse)
+}
+
+
+
+
+#' Collapse text vectors with a comma (no duplicates)
+#'
+#' @param x `character` vector
+#'
+#' @return a `character` scalar
+#' @noRd
+commaset <- function(..., collapse = ", "){
+  paste(sort(unique(unlist(c(...)))), collapse = collapse)
 }
 
 
