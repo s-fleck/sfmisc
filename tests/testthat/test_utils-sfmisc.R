@@ -118,3 +118,17 @@ test_that("path_tidy works as expected", {
     )
   )
 })
+
+
+
+test_that("dupes works as expected", {
+
+  expect_identical(dupes(c(1, 1, 1, 2, 3)), 1)
+
+  drow <- cars[2, ]
+  rownames(drow) <- NULL
+  expect_identical(
+    dupes(rbind(drow, drow, cars[1:3, ])),
+    drow
+  )
+})

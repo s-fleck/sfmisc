@@ -1,17 +1,22 @@
 Type: Package
 Package: sfmisc
 Title: Add commonly used utility functions to an R package
-Version: 1.0.0.9033
-Authors@R: person("Stefan", "Fleck", email = "stefan.b.fleck@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3344-9851"))
+Version: 1.0.0.9034
+Authors@R: 
+    person(given = "Stefan",
+           family = "Fleck",
+           role = c("aut", "cre"),
+           email = "stefan.b.fleck@gmail.com",
+           comment = c(ORCID = "0000-0003-3344-9851"))
 Maintainer: Stefan Fleck <stefan.b.fleck@gmail.com>
-Description: Commonly used utility functions without dependencies that can 
-  easily be embedded in R packages.
+Description: Commonly used utility functions without
+    dependencies that can easily be embedded in R packages.
 License: MIT + file LICENSE
 Suggests: 
     rprojroot,
-    utils,
-    testthat
+    testthat,
+    utils
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2.9000
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.0.2.9000
