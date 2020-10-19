@@ -132,3 +132,48 @@ test_that("dupes works as expected", {
     drow
   )
 })
+
+
+
+
+# is_dir ------------------------------------------------------------------
+
+test_that("dupes works as expected", {
+  td <- file.path(tempdir(), "sfmisc-tests")
+  dir.create(td)
+  on.exit(unlink(td, recursive = TRUE))
+
+  p <- file.path(td, "emtpy")
+  dir.create(p)
+  expect_true(is_dir(p))
+  expect_true(is_empty_dir(p))
+  unlink(p, recursive = TRUE)
+  expect_false(is_dir(p))
+
+  d1 <- file.path(td, "not-empty-1")
+  d2 <- file.path(td, "not-empty-1", "not-empty-2")
+  f  <- file.path(td, "not-empty-1", "not-empty-2", "foo")
+
+  dir.create(d1)
+  dir.create(d2)
+  file.create(f)
+
+  # directories that contain either a file or a directory are not empty
+  expect_false(is_empty_dir(d1))
+  expect_false(is_empty_dir(d2))
+  expect_false(is_dir(f))
+  unlink(f)
+
+  # empty directoris are empty
+  expect_false(is_empty_dir(d1))
+  expect_true(is_empty_dir(d2))
+  unlink(d2, recursive = TRUE)
+
+  # non-existing paths returns FALSE
+  expect_true(is_empty_dir(d1))
+  expect_false(is_empty_dir(d2))
+
+  # cleanup
+  unlink(d1, recursive = TRUE)
+  expect_true(is_empty_dir(td))
+})

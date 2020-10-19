@@ -476,6 +476,19 @@ is_windows_path <- function(x){
 
 
 
+
+is_dir <- function(x){
+  dir.exists(x) & file.info(x)[["isdir"]]
+}
+
+
+
+
+is_empty_dir <- function(x){
+  is_dir(x) &&
+  identical(length(list.files(x, all.files = TRUE, include.dirs = TRUE, no.. = TRUE)), 0L)
+}
+
 # equalish ----------------------------------------------------------------
 
 #' Check for equality within a tolerance level

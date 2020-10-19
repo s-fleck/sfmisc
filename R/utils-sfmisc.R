@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.0.9034
+# sfmisc utils 1.0.0.9035
 
 
 
@@ -480,6 +480,19 @@ is_windows_path <- function(x){
 }
 
 
+
+
+is_dir <- function(x){
+  dir.exists(x) & file.info(x)[["isdir"]]
+}
+
+
+
+
+is_empty_dir <- function(x){
+  is_dir(x) &&
+  identical(length(list.files(x, all.files = TRUE, include.dirs = TRUE, no.. = TRUE)), 0L)
+}
 
 # equalish ----------------------------------------------------------------
 
