@@ -793,6 +793,13 @@ path_tidy <- function(x){
 
 
 
+url_tidy <- function(...){
+  sub("/", "//", gsub("/+", "/", paste(..., sep = "/")))
+}
+
+
+
+
 #' Return (unique) duplicated elements of a vector or rows of a data.frame
 #'
 #' For every element/row of `x` that has at least one duplicate, return one

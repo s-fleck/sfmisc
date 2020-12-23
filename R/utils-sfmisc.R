@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.0.9035
+# sfmisc utils 1.0.2
 
 
 
@@ -793,6 +793,13 @@ path_tidy <- function(x){
   }
 
   x
+}
+
+
+
+
+url_tidy <- function(...){
+  sub("/", "//", gsub("/+", "/", paste(..., sep = "/")))
 }
 
 
