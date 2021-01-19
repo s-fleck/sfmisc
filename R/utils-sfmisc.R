@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.2
+# sfmisc utils 1.0.3
 
 
 
@@ -337,7 +337,12 @@ is_scalar_bool <- function(x){
 #' @return either `TRUE` or `FALSE`
 #' @noRd
 #'
-is_integerish <- function(x){
+is_integerish <- function(x, na_rm = FALSE){
+
+  if (na_rm){
+    x <- x[!is.na(x)]
+  }
+
   if (!is.numeric(x)){
     FALSE
   } else {
