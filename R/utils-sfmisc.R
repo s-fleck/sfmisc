@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.3
+# sfmisc utils 1.0.5
 
 
 
@@ -448,7 +448,7 @@ is_candidate_key <- function(x){
 
   if (is.atomic(x)){
     # !is.infinite instead of is.finite because x can be a character vector
-    length(x) > 1 &&
+    length(x) >= 1 &&
     all(!is.infinite(x)) &&
     !any(is.na(x)) &&
     identical(length(unique(x)), length(x))

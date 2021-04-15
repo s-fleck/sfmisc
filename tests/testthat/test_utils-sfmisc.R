@@ -177,3 +177,18 @@ test_that("dupes works as expected", {
   unlink(d1, recursive = TRUE)
   expect_true(is_empty_dir(td))
 })
+
+
+
+test_that("dupes works as expected", {
+
+  expect_true(is_candidate_key(c(1, 2, 3)))
+  expect_true(is_candidate_key(1))
+  expect_false(is_candidate_key(NA))
+
+  expect_true(is_candidate_key(data.frame(a = c(1, 2, 3))))
+  expect_true(is_candidate_key(data.frame(a = c(1))))
+  expect_false(is_candidate_key(data.frame(a = NA)))
+})
+
+
