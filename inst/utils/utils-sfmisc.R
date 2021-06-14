@@ -662,12 +662,18 @@ n_distinct <- function(x){
 pad_left <- function(
   x,
   width = max(nchar(paste(x))),
-  pad = " "
+  pad = " ",
+  preserve_na = FALSE
 ){
   diff <- pmax(width - nchar(paste(x)), 0L)
   padding <-
     vapply(diff, function(i) paste(rep.int(pad, i), collapse = ""), character(1))
-  paste0(padding, x)
+  res <- paste0(padding, x)
+
+  if (preserve_na)
+    res[is.na(x)] <- NA_character_
+
+  res
 }
 
 
@@ -676,12 +682,18 @@ pad_left <- function(
 pad_right <- function(
   x,
   width = max(nchar(paste(x))),
-  pad = " "
+  pad = " ",
+  preserve_na = FALSE
 ){
   diff <- pmax(width - nchar(paste(x)), 0L)
   padding <-
     vapply(diff, function(i) paste(rep.int(pad, i), collapse = ""), character(1))
   paste0(x, padding)
+
+  if (preserve_na)
+    res[is.na(x)] <- NA_character_
+
+  res
 }
 
 
