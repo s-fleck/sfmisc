@@ -192,3 +192,46 @@ test_that("dupes works as expected", {
 })
 
 
+
+
+test_that("camelCase works as expected", {
+
+  pascalCaseStrings <- c(
+    "PascalCaseTestString",
+    "PascalCaseTestString2",
+    "PascalCase_TestString3")
+
+  expect_identical(
+    camelCase(pascalCaseStrings),
+    c("pascalCaseTestString", "pascalCaseTestString2", "pascalCaseTestString3"))
+
+
+  snake_case_test_strings <- c(
+    "snake_case_test_string",
+    "_snake_case_test_string_2_")
+
+  expect_identical(
+    camelCase(snake_case_test_strings),
+    c("snakeCaseTestString", "snakeCaseTestString2"))
+
+
+  spaced_test_strings <- c(
+    "spaced test string",
+    "spaced    test  string \n 2")
+
+  expect_identical(
+    camelCase(spaced_test_strings),
+    c("spacedTestString", "spacedTestString2"))
+
+
+  mixed_case_test_strings <- c(
+    "mixed caseTest_String",
+    "mixed CaseTest_String2")
+
+  expect_identical(
+    camelCase(mixed_case_test_strings),
+    c("mixedCaseTestString", "mixedCaseTestString2"))
+
+})
+
+

@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.6
+# sfmisc utils 1.0.7
 
 
 
@@ -844,6 +844,69 @@ dupes <- function(x, ...){
     row.names(res) <- NULL
     res
   }
+}
+
+
+
+
+#' Turn a character vector to camelCase
+#'
+#' **EXPERIMENTAL**
+#'
+#' @param x a `character` vector
+#' @param sep_pattern a `regex` pattern to match separators
+#'
+#' @return a `character` vector that follows camelCase guidelines
+#' @export
+#'
+#' @examples
+camelCase <- function(x, sep_pattern = "_|\\s"){
+  assert(is.character(x))
+  assert(is_scalar_character(sep_pattern))
+  substr(x, 1, 1) <- tolower(substr(x, 1, 1))
+
+  if (any(grepl(sep_pattern, x))){
+    x <- gsub(paste0("^((", sep_pattern, ")*)|", "((", sep_pattern, ")*$)"), "", x)
+    sep_positions <- gregexpr(sep_pattern, x)
+
+    res <- vapply(
+      seq_along(x),
+      function(i_strings){
+        string <- x[[i_strings]]
+        i_seps <- sep_positions[[i_strings]]
+
+        if (!identical(i_seps, -1L)){
+          for (i_sep in i_seps){
+            substr(string, i_sep + 1L, i_sep + 1L) <- toupper(substr(string, i_sep + 1L, i_sep + 1L))
+          }
+        }
+
+        string
+      },
+      character(1)
+    )
+    res <- gsub(sep_pattern, "", res)
+  } else {
+    res <- x
+  }
+
+  res
+}
+
+
+
+#' Create description string for listlike R objects Rd documentation
+#'
+#' **EXPERIMENTAL**
+#'
+#' @param x any \R object
+rd_describe_str <- function(x){
+
+  types <- paste0("`", vapply(x, class_fmt, character(1)), "`")
+
+  cat(paste0("\\describe{\n",
+    paste0("  \\item{", paste(names(x), types), "}{ }", collapse = "\n"),
+    "\n}"))
 }
 
 # nocov end
