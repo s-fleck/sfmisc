@@ -852,9 +852,9 @@ dupes <- function(x, ...){
 #' @param sep_pattern a `regex` pattern to match separators
 #'
 #' @return a `character` vector that follows camelCase guidelines
-#' @export
 #'
 #' @examples
+#' camelCase("foo_bar")
 camelCase <- function(x, sep_pattern = "_|\\s"){
   assert(is.character(x))
   assert(is_scalar_character(sep_pattern))
