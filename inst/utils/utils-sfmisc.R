@@ -852,6 +852,7 @@ dupes <- function(x, ...){
 #' @param sep_pattern a `regex` pattern to match separators
 #'
 #' @return a `character` vector that follows camelCase guidelines
+#' @noRd
 #'
 #' @examples
 #' camelCase("foo_bar")
@@ -895,6 +896,7 @@ camelCase <- function(x, sep_pattern = "_|\\s"){
 #' **EXPERIMENTAL**
 #'
 #' @param x any \R object
+#' @noRd
 rd_describe_str <- function(x){
 
   types <- paste0("`", vapply(x, class_fmt, character(1)), "`")
