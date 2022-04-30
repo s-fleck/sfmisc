@@ -17,7 +17,6 @@
 #' @examples
 #'   ptrunc(month.abb)
 #'   ptrunc(month.abb, month.name)
-#'
 ptrunc <- function(
   ...,
   width = 40L,
@@ -37,7 +36,16 @@ ptrunc <- function(
 
 
 
-
+#' Format class of an object
+#'
+#' @param open,close opening and closing bracket to use for formatting
+#'
+#' @noRd
+#' @examples
+#' x <- iris
+#' class(x) <- c("flowers", "data.frame")
+#' class_fmt(x)
+#' fmt_class(class(x))
 fmt_class <- function(x, open = "<", close = ">"){
   paste0(open, paste(x, collapse = "/"), close)
 }
@@ -47,14 +55,18 @@ fmt_class <- function(x, open = "<", close = ">"){
 
 #' @param x any \R object
 #' @param ignore subclasses to ignore
+#'
+#' @rdname fmt_class
 #' @noRd
-class_fmt <- function(x, ignore = NULL){
-  fmt_class(setdiff(class(x), ignore))
+class_fmt <- function(x, ignore = NULL, open = "<", close = ">"){
+  fmt_class(setdiff(class(x), ignore), open = open, close = close)
 }
 
 
 
 
+#' Remove NULLs from an object (usually a list)
+#' @noRd
 compact <- function(x){
   x[!vapply(x, is.null, FALSE)]
 }
@@ -62,6 +74,19 @@ compact <- function(x){
 
 
 
+#' Apply a function to each element of a list or vector (without returning anything)
+#'
+#' Like lapply, but return `.x` instead of the results of `.f`
+#'
+#' @param .x an atomic `vector` or a `list`
+#' @param .f a `function`
+#' @param ... arguments passed on to `.f`
+#'
+#' @return `.x`
+#'
+#' @noRd
+#' @examples
+#' walk(month.name, print)
 walk <- function(.x, .f, ...){
   for (i in seq_along(.x)){
     .f(.x[[i]], ...)
@@ -125,6 +150,8 @@ assert <- function(
 
 
 
+#' Assert a package is installed
+#' @noRd
 assert_namespace <- function(...){
   pkgs <- c(...)
 
@@ -160,8 +187,10 @@ assert_namespace <- function(...){
 
 # predicates --------------------------------------------------------------
 
-
-
+#' Convenient predicate functions
+#' @param x Any \R Object.
+#' @return either `TRUE` or `FALSE`
+#' @noRd
 is_error <- function(x){
   inherits(x, "error")
 }
@@ -169,6 +198,8 @@ is_error <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_try_error <- function(x){
   inherits(x, "try-error")
 }
@@ -176,6 +207,8 @@ is_try_error <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar <- function(x){
   identical(length(x), 1L)
 }
@@ -183,6 +216,8 @@ is_scalar <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_POSIXct <- function(x){
   inherits(x, "POSIXct")
 }
@@ -190,6 +225,8 @@ is_POSIXct <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_POSIXct <- function(x){
   is_POSIXct(x) && is_scalar(x)
 }
@@ -197,6 +234,8 @@ is_scalar_POSIXct <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_POSIXlt <- function(x){
   inherits(x, "POSIXlt")
 }
@@ -204,6 +243,8 @@ is_POSIXlt <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_POSIXlt <- function(x){
   is_POSIXlt(x) && is_scalar(x)
 }
@@ -211,6 +252,8 @@ is_scalar_POSIXlt <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_POSIXt <- function(x){
   inherits(x, "POSIXt")
 }
@@ -218,6 +261,8 @@ is_POSIXt <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_POSIXt <- function(x){
   is_POSIXt(x) && is_scalar(x)
 }
@@ -225,6 +270,8 @@ is_scalar_POSIXt <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_Date <- function(x){
   inherits(x, "Date")
 }
@@ -232,6 +279,8 @@ is_Date <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_Date <- function(x){
   is_Date(x) && is_scalar(x)
 }
@@ -239,6 +288,8 @@ is_scalar_Date <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_list <- function(x){
   is_list(x) && is_scalar(x)
 }
@@ -246,6 +297,8 @@ is_scalar_list <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_atomic <- function(x){
   is.atomic(x) && is_scalar(x)
 }
@@ -253,6 +306,8 @@ is_scalar_atomic <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_logical <- function(x){
   is.logical(x) && is_scalar(x)
 }
@@ -260,6 +315,8 @@ is_scalar_logical <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_integer <- function(x){
   is.integer(x) && is_scalar(x)
 }
@@ -267,6 +324,8 @@ is_scalar_integer <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_factor <- function(x){
   is.factor(x) && is_scalar(x)
 }
@@ -274,6 +333,8 @@ is_scalar_factor <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_list <- function(x){
   is.list(x) && is_scalar(x)
 }
@@ -281,6 +342,8 @@ is_scalar_list <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_numeric <- function(x){
   is.numeric(x) && is_scalar(x)
 }
@@ -288,6 +351,8 @@ is_scalar_numeric <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_character <- function(x){
   is.character(x) && is_scalar(x)
 }
@@ -295,6 +360,8 @@ is_scalar_character <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_vector <- function(x){
   is.atomic(x) || is.list(x)
 }
@@ -302,6 +369,8 @@ is_vector <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_bool <- function(x){
   is.logical(x) && !anyNA(x)
 }
@@ -316,7 +385,6 @@ is_bool <- function(x){
 #' @param x Any \R Object.
 #' @return either `TRUE` or `FALSE`
 #' @noRd
-#'
 is_scalar_bool <- function(x){
   identical(x, TRUE) || identical(x, FALSE)
 }
@@ -331,7 +399,6 @@ is_scalar_bool <- function(x){
 #' @param x Any \R Object.
 #' @return either `TRUE` or `FALSE`
 #' @noRd
-#'
 is_integerish <- function(x, na_rm = FALSE){
 
   if (na_rm){
@@ -348,6 +415,8 @@ is_integerish <- function(x, na_rm = FALSE){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_scalar_integerish <- function(x){
   is_scalar(x) && is_integerish(x)
 }
@@ -355,6 +424,8 @@ is_scalar_integerish <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_n <- function(x){
   is_scalar_integerish(x) && identical(x > 0, TRUE)
 }
@@ -362,6 +433,8 @@ is_n <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_n0 <- function(x){
   is_scalar_integerish(x) && identical(x >= 0, TRUE)
 }
@@ -460,7 +533,9 @@ is_candidate_key <- function(x){
 
 
 
-# https://modern-sql.com/feature/is-distinct-from
+#' @rdname is_error
+#' @seealso  https://modern-sql.com/feature/is-distinct-from
+#' @noRd
 is_not_distinct_from <- function(x, y){
   ((x == y) & !is.na(x) & !is.na(y)) | (is.na(x) & is.na(y))
 }
@@ -468,13 +543,16 @@ is_not_distinct_from <- function(x, y){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_distinct_from <- function(x, y){
   ((x != y) & !is.na(x) & !is.na(y)) | (is.na(x) != is.na(y))
 }
 
 
 
-
+#' @rdname is_error
+#' @noRd
 is_windows_path <- function(x){
   nchar(x) >= 2 & grepl("^[A-Za-z].*", x) & substr(x, 2, 2) == ":"
 }
@@ -482,6 +560,8 @@ is_windows_path <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_dir <- function(x){
   dir.exists(x) & file.info(x)[["isdir"]]
 }
@@ -489,6 +569,8 @@ is_dir <- function(x){
 
 
 
+#' @rdname is_error
+#' @noRd
 is_empty_dir <- function(x){
   is_dir(x) &&
   identical(length(list.files(x, all.files = TRUE, include.dirs = TRUE, no.. = TRUE)), 0L)
@@ -579,14 +661,11 @@ as_scalar <- function(x){
 #'   length 0 (e.g. `NULL`, `numeric()`, ...)
 #'
 #' @noRd
-#' @family special equality checks
-#' @return `TRUE/FALSE`
+#' @return `TRUE` or `FALSE`
 #'
 #' @examples
-#'
 #' all_are_identical(c(1,2,3))
 #' all_are_identical(c(1,1,1))
-#'
 all_are_identical <- function(x, empty_value = FALSE) {
   assert(length(empty_value) <= 1)
 
@@ -612,16 +691,13 @@ all_are_identical <- function(x, empty_value = FALSE) {
 #'
 #' @inheritParams all_are_identical
 #'
-#' @return TRUE/FALSE
+#' @return `TRUE` or `FALSE`
 #'
 #' @noRd
-#' @family special equality checks
 #'
 #' @examples
-#'
-#' all_are_identical(c(1,2,3))
-#' all_are_identical(c(1,1,1))
-#'
+#' all_are_distinct(c(1,2,3))
+#' all_are_distinct(c(1,1,1))
 all_are_distinct <- function(
   x,
   empty_value = FALSE
@@ -778,7 +854,7 @@ commaset <- function(..., collapse = ", "){
 
 
 
-#' Clean up paths to make them comparable, inspired by fs::path_tidy
+#' Clean up paths to make them comparable, inspired by [fs::path_tidy()]
 #'
 #' @param x `character` vector
 #'
@@ -810,6 +886,8 @@ path_tidy <- function(x){
 
 
 
+#' Clean up urls to make them comparable
+#' @noRd
 url_tidy <- function(...){
   sub("/", "//", gsub("/+", "/", paste(..., sep = "/")))
 }
@@ -909,26 +987,27 @@ rd_describe_str <- function(x){
 
 
 
-#' Simple multi criteria validator
+#' Simple data validation
 #'
-#' Useful for validating datasets based on multiple criteria. Produces nice
-#' error messages together with `assert_all()` (see examples)
+#' **EXPERIMENTAL** Minimalistic mutli-criteria data validation. Designed to
+#' work nicely together with `assert_all()` (see examples)
 #'
-#' **EXPERIMENTAL**
+#' @param ... Arbitrary expressions that evaluate to either `TRUE` or `FALSE`.
+#'   Expressions that evaluate to anything else, will be counted as `FALSE` and
+#'   throw a warning. You can name the expressions to generate nice labels
+#'  (but that's usually not necessary).
 #'
-#' @param x any \R object
+#' @return a named `logical` vector that is guranteed to have no `NAs`.
 #' @noRd
 #'
 #' @examples
-#' # validate produces validation objects based on named or unnamed boolean expressions
-#'
 #' validation <- validate(
-#'   all(iris$Petal.Length == 5),
-#'   `all species are valid` = all(iris$Species %in% c("setosa", "versicolor", "virginica"))
+#'   all(iris$Petal.Length < 5),
+#'   `all species are valid` = all(iris$Species %in% c("setosa", "versicolor", "virginica")),
+#'   `all sepals are small` = all(iris$Sepal.Length < 1)
 #' )
 #'
 #' # validate can be used `with()` for added convenience:
-#'
 #' validation <- with(iris, validate(
 #'   all(Petal.Length < 5),
 #'   `all species are valid` = all(Species %in% c("setosa", "versicolor", "virginica")),
@@ -936,10 +1015,7 @@ rd_describe_str <- function(x){
 #' ))
 #'
 #' # validate works together with assert_all to produce nice errors
-#'
 #' assert_all(validation)
-#'
-
 validate <- function(
     ...
 ){
@@ -977,9 +1053,21 @@ validate <- function(
 
 
 
+#' Assert all elements of a vector or list are `TRUE`
+#'
+#' Check if all elements of `x` are `TRUE`, and throw an informative warning that
+#' contains the position and name (if any) of the element
+#'
+#' @param x A `logical` vector or a `list` with only `logical` elements
+#'
+#' @return `TRUE`
+#' @noRd
+#'
+#' @examples
+#' assert_all(c("this is true" = TRUE, "this is FALSE" = FALSE, FALSE))
 assert_all <- function(x){
 
-  if (unlist(all(x))){
+  if (all(unlist(x))){
     return(TRUE)
   }
 
@@ -1006,9 +1094,7 @@ assert_all <- function(x){
     }
   }
 
-  stop("\n", paste(warning_messages, collapse = "\n"))
-
-  FALSE
+  stop("Assertion failed:\n", paste(warning_messages, collapse = "\n"), call. = FALSE)
 }
 
 # nocov end
