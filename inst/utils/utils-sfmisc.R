@@ -906,4 +906,109 @@ rd_describe_str <- function(x){
     "\n}"))
 }
 
+
+
+
+#' Simple multi criteria validator
+#'
+#' Useful for validating datasets based on multiple criteria. Produces nice
+#' error messages together with `assert_all()` (see examples)
+#'
+#' **EXPERIMENTAL**
+#'
+#' @param x any \R object
+#' @noRd
+#'
+#' @examples
+#' # validate produces validation objects based on named or unnamed boolean expressions
+#'
+#' validation <- validate(
+#'   all(iris$Petal.Length == 5),
+#'   `all species are valid` = all(iris$Species %in% c("setosa", "versicolor", "virginica"))
+#' )
+#'
+#' # validate can be used `with()` for added convenience:
+#'
+#' validation <- with(iris, validate(
+#'   all(Petal.Length < 5),
+#'   `all species are valid` = all(Species %in% c("setosa", "versicolor", "virginica")),
+#'   `all sepals are small` = all(Sepal.Length < 1)
+#' ))
+#'
+#' # validate works together with assert_all to produce nice errors
+#'
+#' assert_all(validation)
+#'
+
+validate <- function(
+    ...
+){
+  expressions <- eval(substitute(alist(...)))
+
+  result <- logical(length(expressions))
+  criteria  <- character(length(expressions))
+  criteria_names <- names(expressions)
+  if (is.null(criteria_names)){
+    criteria_names <- character(length(expressions))
+  }
+
+
+  for (i in seq_along(expressions)){
+    criteria[[i]] <- paste(deparse(expressions[[i]], width.cutoff = 500L), collapse = " ")
+
+    result[[i]] <-  tryCatch({
+      res <- eval(expressions[[i]], envir = parent.frame(), enclos = parent.frame())
+      if (!is_scalar_bool(res)){
+        stop("Cannot validate expression ", i, ": `", criteria[[i]], "` does not evaluate to either `TRUE` or `FALSE`", call. = FALSE)
+      }
+      res
+    },
+
+    error = function(e){
+      warning(e$message, call. = FALSE)
+      FALSE
+    })
+  }
+
+  names(result) <- ifelse(is_blank(criteria_names), criteria, criteria_names)
+  result
+}
+
+
+
+
+assert_all <- function(x){
+
+  if (unlist(all(x))){
+    return(TRUE)
+  }
+
+  element_names <- names(x)
+  if (is.null(names)){
+    element_names <- character(length(x))
+  }
+
+  warning_messages <- character(0)
+
+  for (i in seq_along(x)){
+    if (!isTRUE(x[[i]])){
+      if (is_blank(element_names[[i]])){
+        warning_messages <- c(
+          warning_messages,
+          paste0("[", i, "] is not TRUE"))
+
+      } else {
+        warning_messages <- c(
+          warning_messages,
+          paste0("[", i, "] `", element_names[[i]], "` is not TRUE"))
+      }
+
+    }
+  }
+
+  stop("\n", paste(warning_messages, collapse = "\n"))
+
+  FALSE
+}
+
 # nocov end
