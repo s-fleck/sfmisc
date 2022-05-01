@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^build_docs.R$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
