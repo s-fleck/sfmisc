@@ -3,7 +3,7 @@
 #' @return `TRUE` on success
 #' @export
 #'
-use_sfmisc <- function(){
+use_sfmisc <- function(noRd = TRUE){
   stopifnot(requireNamespace("rprojroot"))
 
   get_sfmisc_version <- function(x){
@@ -38,12 +38,12 @@ use_sfmisc <- function(){
 
   }
 
-  write(
-    sprintf("# sfmisc utils %s\n\n\n\n", current_version),
-    outfile
-  )
+  code <- readLines(infile)
+  code <- c(sprintf("# sfmisc utils %s\n\n", current_version), code)
 
+  if (!noRd){
+    code <- gsub("\\s*@noRd", "", code)
+  }
 
-
-  file.append(outfile, infile)
+  writeLines(code, outfile, useBytes = TRUE)
 }

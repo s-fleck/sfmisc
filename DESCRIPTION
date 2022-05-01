@@ -1,7 +1,7 @@
 Type: Package
 Package: sfmisc
 Title: Add commonly used utility functions to an R package
-Version: 1.0.11
+Version: 1.0.12
 Authors@R: 
     person(given = "Stefan",
            family = "Fleck",
