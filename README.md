@@ -9,6 +9,9 @@ embedded into other R packages with `sfmisc::use_sfmisc()`. Since all functions
 are small and self-contained, this is a convenient way to get some extra
 utilities into an R-package without adding an external dependency. 
 
+**Note:** Many (but not all) of the helpers included in this package overlap
+with tidyverse functions of the same name (but without compilation dependencies)
+
 
 ## Installation
 

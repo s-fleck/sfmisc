@@ -1,4 +1,4 @@
-# sfmisc utils 1.0.12
+# sfmisc utils 1.0.14
 
 
 # utils -------------------------------------------------------------------
@@ -12,7 +12,7 @@
 #' @param x a vector
 #' @param width (maximum) width of result
 #' @param dots `character` scalar. String to use for ellipses
-#' @inheritParams paste
+#' @inheritParams base::paste
 #'
 #' @return a `character` scalar
 #'
@@ -583,8 +583,6 @@ is_empty_dir <- function(x){
 
 #' Check for equality within a tolerance level
 #'
-#'
-#'
 #' @param x,y `numeric` vectors
 #' @param tolerance `numeric` scalar. tolerance level (absolute value). Defaults
 #'   to `.Machine$double.eps^0.5` which is a sensible default for comparing
@@ -595,13 +593,11 @@ is_empty_dir <- function(x){
 #'
 #' @seealso [.Machine]
 #'
-#'
 #' @examples
 #' a <- 0.7
 #' b <- 0.2
 #' a - b == 0.5
 #' equalish(a - b, 0.5)
-#'
 equalish <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
   assert(is_scalar_numeric(tolerance) && tolerance >= 0)
   abs(x - y) < tolerance
@@ -615,14 +611,12 @@ equalish <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
 #'   defined as `abs(x - y) / pmax(abs(x), abs(y))`. If both `x` and `y` are
 #'   `0` the relative difference is not defined, but this function will still
 #'   return `TRUE`.
-#'
+#' @rdname equalish
 #'
 #' @examples
-#'
 #' equalish_frac(1000, 1010, tolerance = 0.01)
 #' equalish_frac(1000, 1010, tolerance = 0.009)
 #' equalish_frac(0, 0)
-#'
 equalish_frac <- function(x, y, tolerance = .Machine$double.eps ^ 0.5){
   assert(is_scalar_numeric(tolerance) && tolerance >= 0)
   res <- abs(x - y) / pmax(abs(x), abs(y)) < tolerance
@@ -1018,7 +1012,9 @@ rd_describe_str <- function(x){
 #' ))
 #'
 #' # validate works together with assert_all to produce nice errors
-#' assert_all(validation)
+#' try(
+#'   assert_all(validation)
+#' )
 validate <- function(
     ...
 ){
@@ -1067,7 +1063,9 @@ validate <- function(
 #'
 #'
 #' @examples
-#' assert_all(c("this is true" = TRUE, "this is FALSE" = FALSE, FALSE))
+#' try(
+#'   assert_all(c("this is true" = TRUE, "this is FALSE" = FALSE, FALSE))
+#' )
 assert_all <- function(x){
 
   if (all(unlist(x))){

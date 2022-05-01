@@ -1,3 +1,6 @@
 pkgload::load_all()
-sfmisc::use_sfmisc(noRd = FALSE)
+
+options("sfmisc.InlcudeDocs" = TRUE)
+sfmisc::use_sfmisc()
+
 devtools::document()

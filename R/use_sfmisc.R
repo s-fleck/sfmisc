@@ -3,7 +3,7 @@
 #' @return `TRUE` on success
 #' @export
 #'
-use_sfmisc <- function(noRd = TRUE){
+use_sfmisc <- function(){
   stopifnot(requireNamespace("rprojroot"))
 
   get_sfmisc_version <- function(x){
@@ -41,7 +41,7 @@ use_sfmisc <- function(noRd = TRUE){
   code <- readLines(infile)
   code <- c(sprintf("# sfmisc utils %s\n\n", current_version), code)
 
-  if (!noRd){
+  if (getOption("sfmisc.InlcudeDocs")){
     code <- gsub("\\s*@noRd", "", code)
   }
 
