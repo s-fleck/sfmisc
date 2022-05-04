@@ -41,7 +41,7 @@ use_sfmisc <- function(){
   code <- readLines(infile)
   code <- c(sprintf("# sfmisc utils %s\n\n", current_version), code)
 
-  if (getOption("sfmisc.InlcudeDocs")){
+  if (getOption("sfmisc.InlcudeDocs", FALSE)){
     code <- gsub("\\s*@noRd", "", code)
   }
 
