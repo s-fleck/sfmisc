@@ -990,6 +990,8 @@ rd_describe_str <- function(x){
 #'   Expressions that evaluate to anything else, will be counted as `FALSE` and
 #'   throw a warning. You can name the expressions to generate nice labels
 #'  (but that's usually not necessary).
+#' @param .all `logical` scalar. Wrap each expression in `...` in `all()`
+#'   (useful for validating columns in `data.frames`)
 #'
 #' @return a named `logical` vector that is guranteed to have no `NAs`.
 #' @noRd
@@ -1013,8 +1015,10 @@ rd_describe_str <- function(x){
 #'   assert_all(validation)
 #' )
 validate <- function(
-    ...
+    ...,
+    .all = TRUE
 ){
+  assert(is_scalar_bool(.all))
   expressions <- eval(substitute(alist(...)))
 
   result <- logical(length(expressions))
@@ -1030,6 +1034,9 @@ validate <- function(
 
     result[[i]] <-  tryCatch({
       res <- eval(expressions[[i]], envir = parent.frame(), enclos = parent.frame())
+      if (.all){
+        res <- all(res)
+      }
       if (!is_scalar_bool(res)){
         stop("Cannot validate expression ", i, ": `", criteria[[i]], "` does not evaluate to either `TRUE` or `FALSE`", call. = FALSE)
       }
