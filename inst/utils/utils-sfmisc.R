@@ -110,9 +110,7 @@ walk <- function(.x, .f, ...){
 #'   an exception with an automatically constructed error message (if `...`
 #'   was not supplied). Anything else will throw an exception stating that
 #'   `cond` was not valid.
-#' @param ... passed on to [stop()]
-#' @param call. passed on to [stop()]
-#' @param domain passed on to [stop()]
+#' @param ... passed on to [paste0()]
 #'
 #' @noRd
 #'
@@ -129,22 +127,31 @@ walk <- function(.x, .f, ...){
 assert <- function(
   cond,
   ...,
-  call. = FALSE,
-  domain = NULL
+  call = sys.call(-1)
 ){
   if (identical(cond, TRUE)){
     return(TRUE)
-  } else if (identical(cond, FALSE)){
+  }
+
+  if (identical(cond, FALSE)){
     if (identical(length(list(...)), 0L)){
       msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
-      stop(msg, call. = call., domain = domain)
     } else {
-      suppressWarnings( stop(..., call. = call., domain = domain) )
+      msg <- suppressWarnings(paste0(...))
     }
-
   } else {
-    stop("Assertion must be either 'TRUE' or 'FALSE'")
+    msg <- "Assertion must be either 'TRUE' or 'FALSE'"
   }
+
+  error <- structure(
+    list(
+      message = as.character(msg),
+      call = call
+    ),
+    class = c("assertError", "error", "condition")
+  )
+
+  stop(error)
 }
 
 
