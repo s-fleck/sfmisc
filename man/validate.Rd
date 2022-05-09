@@ -4,13 +4,16 @@
 \alias{validate}
 \title{Simple data validation}
 \usage{
-validate(...)
+validate(..., .all = TRUE)
 }
 \arguments{
 \item{...}{Arbitrary expressions that evaluate to either \code{TRUE} or \code{FALSE}.
 Expressions that evaluate to anything else, will be counted as \code{FALSE} and
 throw a warning. You can name the expressions to generate nice labels
 (but that's usually not necessary).}
+
+\item{.all}{\code{logical} scalar. Wrap each expression in \code{...} in \code{all()}
+(useful for validating columns in \code{data.frames})}
 }
 \value{
 a named \code{logical} vector that is guranteed to have no \code{NAs}.

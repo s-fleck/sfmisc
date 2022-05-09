@@ -4,34 +4,32 @@
 \alias{assert}
 \title{Assert a condition}
 \usage{
-assert(cond, ..., call. = FALSE, domain = NULL)
+assert(cond, ..., call = sys.call(-1))
 }
 \arguments{
-\item{cond}{\code{TRUE} or \code{FALSE} (without any attributes). \code{FALSE} will throw
-an exception with an automatically constructed error message (if \code{...}
-was not supplied). Anything else will throw an exception stating that
-\code{cond} was not valid.}
+\item{cond}{\code{TRUE} or \code{FALSE} (without any attributes).
+\itemize{
+\item \code{TRUE} will return \code{TRUE}
+\item \code{FALSE} will throw an exception with an automatically constructed
+error if none was supplied in \code{...}.
+\item any other value will throw an error indicating that \code{cond} was illegal
+}}
 
-\item{...}{passed on to \code{\link[=stop]{stop()}}}
-
-\item{call.}{passed on to \code{\link[=stop]{stop()}}}
-
-\item{domain}{passed on to \code{\link[=stop]{stop()}}}
+\item{...}{Either \code{character} scalars that will be combined with \code{\link[base:paste]{base::paste0()}}
+or a single \code{condition} object.}
 }
 \value{
-TRUE on success
+\code{TRUE} on success
 }
 \description{
-A simpler and more efficient for \code{\link[base:stopifnot]{base::stopifnot()}} that has an easy
-mechanism for supplying custom error messages. As opposed to \code{stopifnot()},
-\code{assert()} only works with a single (scalar) assertions.
+A simpler and more efficient replacement for \code{\link[base:stopifnot]{base::stopifnot()}}.
+As opposed to \code{stopifnot()}, \code{assert()} only works with a single (scalar) assertions.
 }
 \examples{
-
 \dontrun{
-assert(1 == 1)
-assert(1 == 2)
+  assert(1 == 1)
+  assert(1 == 2)
+  assert(1 == 2, "one is not ", "two")
+  assert(1 == 2, errorCondition("one is not two", "ObviousError"))
 }
-
-
 }

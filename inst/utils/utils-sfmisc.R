@@ -102,28 +102,28 @@ walk <- function(.x, .f, ...){
 
 #' Assert a condition
 #'
-#' A simpler and more efficient for [base::stopifnot()] that has an easy
-#' mechanism for supplying custom error messages. As opposed to `stopifnot()`,
-#' `assert()` only works with a single (scalar) assertions.
+#' A simpler and more efficient replacement for [base::stopifnot()].
+#' As opposed to `stopifnot()`, `assert()` only works with a single (scalar) assertions.
 #'
-#' @param cond `TRUE` or `FALSE` (without any attributes). `FALSE` will throw
-#'   an exception with an automatically constructed error message (if `...`
-#'   was not supplied). Anything else will throw an exception stating that
-#'   `cond` was not valid.
-#' @param ... passed on to [paste0()]
+#' @param cond `TRUE` or `FALSE` (without any attributes). 
+#'   * `TRUE` will return `TRUE`
+#'   * `FALSE` will throw an exception with an automatically constructed 
+#'     error if none was supplied in `...`.
+#'   * any other value will throw an error indicating that `cond` was illegal
+#' @param ... Either `character` scalars that will be combined with [base::paste0()]
+#'   or a single `condition` object. 
 #'
 #' @noRd
 #'
-#' @return TRUE on success
+#' @return `TRUE` on success
 #'
 #' @examples
-#'
 #' \dontrun{
-#' assert(1 == 1)
-#' assert(1 == 2)
+#'   assert(1 == 1)
+#'   assert(1 == 2)
+#'   assert(1 == 2, "one is not ", "two")
+#'   assert(1 == 2, errorCondition("one is not two", "ObviousError"))
 #' }
-#'
-#'
 assert <- function(
   cond,
   ...,
@@ -134,11 +134,20 @@ assert <- function(
   }
 
   if (identical(cond, FALSE)){
-    if (identical(length(list(...)), 0L)){
+    
+    dots <- list(...)
+  
+    if (identical(length(dots), 0L)){
       msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
     } else {
+    
+      if (inherits(dots[[1]], "condition")){
+        stop(dots[[1]])
+      }
+    
       msg <- suppressWarnings(paste0(...))
     }
+    
   } else {
     msg <- "Assertion must be either 'TRUE' or 'FALSE'"
   }
