@@ -4,10 +4,10 @@
 \alias{assert_all}
 \title{Assert all elements of a vector or list are \code{TRUE}}
 \usage{
-assert_all(x)
+assert_all(..., call = sys.call(-1))
 }
 \arguments{
-\item{x}{A \code{logical} vector or a \code{list} with only \code{logical} elements}
+\item{...}{\code{logical} vectors or \code{lists} with only \code{logical} elements}
 }
 \value{
 \code{TRUE}
@@ -19,5 +19,12 @@ contains the position and name (if any) of the element
 \examples{
 try(
   assert_all(c("this is true" = TRUE, "this is FALSE" = FALSE, FALSE))
+  assert_all(
+    list(a = c(TRUE, FALSE), b = TRUE),
+    list(TRUE)
+  )
 )
+}
+\seealso{
+\code{\link[=assert]{assert()}}
 }

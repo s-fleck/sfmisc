@@ -105,18 +105,18 @@ walk <- function(.x, .f, ...){
 #' A simpler and more efficient replacement for [base::stopifnot()].
 #' As opposed to `stopifnot()`, `assert()` only works with a single (scalar) assertions.
 #'
-#' @param cond `TRUE` or `FALSE` (without any attributes). 
+#' @param cond `TRUE` or `FALSE` (without any attributes).
 #'   * `TRUE` will return `TRUE`
-#'   * `FALSE` will throw an exception with an automatically constructed 
+#'   * `FALSE` will throw an exception with an automatically constructed
 #'     error if none was supplied in `...`.
 #'   * any other value will throw an error indicating that `cond` was illegal
 #' @param ... Either `character` scalars that will be combined with [base::paste0()]
-#'   or a single `condition` object. 
+#'   or a single `condition` object.
 #'
 #' @noRd
 #'
 #' @return `TRUE` on success
-#'
+#' @seealso [assert_all()]
 #' @examples
 #' \dontrun{
 #'   assert(1 == 1)
@@ -134,20 +134,20 @@ assert <- function(
   }
 
   if (identical(cond, FALSE)){
-    
+
     dots <- list(...)
-  
+
     if (identical(length(dots), 0L)){
       msg <- paste0("`", deparse(match.call()[[2]]), "`", " is not 'TRUE'")
     } else {
-    
+
       if (inherits(dots[[1]], "condition")){
         stop(dots[[1]])
       }
-    
+
       msg <- suppressWarnings(paste0(...))
     }
-    
+
   } else {
     msg <- "Assertion must be either 'TRUE' or 'FALSE'"
   }
@@ -1077,30 +1077,41 @@ validate <- function(
 #' Check if all elements of `x` are `TRUE`, and throw an informative warning that
 #' contains the position and name (if any) of the element
 #'
-#' @param x A `logical` vector or a `list` with only `logical` elements
+#' @param ... `logical` vectors or `lists` with only `logical` elements
+#' @inheritParams assert
 #'
 #' @return `TRUE`
+#' @seealso [assert()]
 #' @noRd
 #'
 #' @examples
 #' try(
 #'   assert_all(c("this is true" = TRUE, "this is FALSE" = FALSE, FALSE))
+#'   assert_all(
+#'     list(a = c(TRUE, FALSE), b = TRUE),
+#'     list(TRUE)
+#'   )
 #' )
-assert_all <- function(x){
+assert_all <- function(
+  ...,
+  call = sys.call(-1)
+){
 
-  if (all(unlist(x))){
+  conds <- unlist(list(...))
+
+  if (all(conds)){
     return(TRUE)
   }
 
-  element_names <- names(x)
-  if (is.null(names)){
-    element_names <- character(length(x))
+  element_names <- names(conds)
+  if (is.null(element_names)){
+    element_names <- character(length(conds))
   }
 
   warning_messages <- character(0)
 
-  for (i in seq_along(x)){
-    if (!isTRUE(x[[i]])){
+  for (i in seq_along(conds)){
+    if (!isTRUE(conds[[i]])){
       if (is_blank(element_names[[i]])){
         warning_messages <- c(
           warning_messages,
@@ -1111,11 +1122,18 @@ assert_all <- function(x){
           warning_messages,
           paste0("[", i, "] `", element_names[[i]], "` is not TRUE"))
       }
-
     }
   }
 
-  stop("Assertion failed:\n", paste(warning_messages, collapse = "\n"), call. = FALSE)
+  error <- structure(
+    list(
+      message = paste0(c("Assertion failed", warning_messages), collapse = "\n"),
+      call = call
+    ),
+    class = c("assertError", "error", "condition")
+  )
+
+  stop(error)
 }
 
 # nocov end

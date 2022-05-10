@@ -30,6 +30,9 @@ As opposed to \code{stopifnot()}, \code{assert()} only works with a single (scal
   assert(1 == 1)
   assert(1 == 2)
   assert(1 == 2, "one is not ", "two")
-  assert(1 == 2, errorCondition("one is not two", "ObviousError"))
+  assert(1 == 2, errorCondition("one is not two", class = "ObviousError"))
 }
+}
+\seealso{
+\code{\link[=assert_all]{assert_all()}}
 }
