@@ -1,7 +1,7 @@
 Type: Package
 Package: sfmisc
 Title: Add commonly used utility functions to an R package
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: 
     person(given = "Stefan",
            family = "Fleck",
@@ -19,5 +19,5 @@ Suggests:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1.9000
 URL: https://s-fleck.github.io/sfmisc/

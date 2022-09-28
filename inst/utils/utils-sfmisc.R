@@ -774,7 +774,7 @@ pad_right <- function(
   diff <- pmax(width - nchar(paste(x)), 0L)
   padding <-
     vapply(diff, function(i) paste(rep.int(pad, i), collapse = ""), character(1))
-  paste0(x, padding)
+  res <- paste0(x, padding)
 
   if (preserve_na)
     res[is.na(x)] <- NA_character_
