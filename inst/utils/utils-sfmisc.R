@@ -841,11 +841,18 @@ preview_object <- function(
 #' Collapse text vectors with a comma
 #'
 #' @param x `character` vector
+#' @param quote `character` scalar. A quote character to place left and right
+#'   of each entry in the list (usually `"` or `'`)
 #'
 #' @return a `character` scalar
 #' @noRd
-comma <- function(..., collapse = ", "){
-  paste(unlist(c(...)), collapse = collapse)
+comma <- function(..., collapse = ", ", quote = NULL){
+  els <- unlist(c(...))
+  if (!is.null(quote)){
+    els <- paste(quote, els, quote, sep = "")
+  }
+
+  paste(els, collapse = collapse)
 }
 
 
@@ -854,11 +861,18 @@ comma <- function(..., collapse = ", "){
 #' Collapse text vectors with a comma (no duplicates)
 #'
 #' @param x `character` vector
+#' @param quote `character` scalar. A quote character to place left and right
+#'   of each entry in the list (usually `"` or `'`)
 #'
 #' @return a `character` scalar
 #' @noRd
-commaset <- function(..., collapse = ", "){
-  paste(sort(unique(unlist(c(...)))), collapse = collapse)
+commaset <- function(..., collapse = ", ", quote = NULL){
+  els <- sort(unique(unlist(c(...))))
+  if (!is.null(quote)){
+    els <- paste(quote, els, quote, sep = "")
+  }
+
+  paste(els, collapse = collapse)
 }
 
 
