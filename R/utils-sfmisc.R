@@ -1,4 +1,4 @@
-# sfmisc utils 1.1.3
+# sfmisc utils 1.2.0
 
 
 # utils -------------------------------------------------------------------
@@ -21,11 +21,11 @@
 #'   ptrunc(month.abb)
 #'   ptrunc(month.abb, month.name)
 ptrunc <- function(
-  ...,
-  width = 40L,
-  sep = ", ",
-  collapse = ", ",
-  dots = " ..."
+    ...,
+    width = 40L,
+    sep = ", ",
+    collapse = ", ",
+    dots = " ..."
 ){
   assert(width > 7L, "The minimum supported width is 8")
   x <- paste(..., sep = sep, collapse = collapse)
@@ -128,9 +128,9 @@ walk <- function(.x, .f, ...){
 #'   assert(1 == 2, errorCondition("one is not two", class = "ObviousError"))
 #' }
 assert <- function(
-  cond,
-  ...,
-  call = sys.call(-1)
+    cond,
+    ...,
+    call = sys.call(-1)
 ){
   if (identical(cond, TRUE)){
     return(TRUE)
@@ -536,16 +536,16 @@ is_candidate_key <- function(x){
   if (is.atomic(x)){
     # !is.infinite instead of is.finite because x can be a character vector
     length(x) >= 1 &&
-    all(!is.infinite(x)) &&
-    !any(is.na(x)) &&
-    identical(length(unique(x)), length(x))
+      all(!is.infinite(x)) &&
+      !any(is.na(x)) &&
+      identical(length(unique(x)), length(x))
   } else if (is.list(x)){
     length(x) > 0 &&
-    length(x[[1]] > 0) &&
-    do.call(is_equal_length, x) &&
-    all(vapply(x, function(.x) all(!is.infinite(.x)), logical(1))) &&
-    all(vapply(x, function(.x) !any(is.na(.x)), logical(1))) &&
-    !any(duplicated(as.data.frame(x)))
+      length(x[[1]] > 0) &&
+      do.call(is_equal_length, x) &&
+      all(vapply(x, function(.x) all(!is.infinite(.x)), logical(1))) &&
+      all(vapply(x, function(.x) !any(is.na(.x)), logical(1))) &&
+      !any(duplicated(as.data.frame(x)))
   }
 }
 
@@ -592,7 +592,7 @@ is_dir <- function(x){
 #' @noRd
 is_empty_dir <- function(x){
   is_dir(x) &&
-  identical(length(list.files(x, all.files = TRUE, include.dirs = TRUE, no.. = TRUE)), 0L)
+    identical(length(list.files(x, all.files = TRUE, include.dirs = TRUE, no.. = TRUE)), 0L)
 }
 
 # equalish ----------------------------------------------------------------
@@ -712,8 +712,8 @@ all_are_identical <- function(x, empty_value = FALSE) {
 #' all_are_distinct(c(1,2,3))
 #' all_are_distinct(c(1,1,1))
 all_are_distinct <- function(
-  x,
-  empty_value = FALSE
+    x,
+    empty_value = FALSE
 ){
   assert(length(empty_value) <= 1)
 
@@ -749,10 +749,10 @@ n_distinct <- function(x){
 
 
 pad_left <- function(
-  x,
-  width = max(nchar(paste(x))),
-  pad = " ",
-  preserve_na = FALSE
+    x,
+    width = max(nchar(paste(x))),
+    pad = " ",
+    preserve_na = FALSE
 ){
   diff <- pmax(width - nchar(paste(x)), 0L)
   padding <-
@@ -769,10 +769,10 @@ pad_left <- function(
 
 
 pad_right <- function(
-  x,
-  width = max(nchar(paste(x))),
-  pad = " ",
-  preserve_na = FALSE
+    x,
+    width = max(nchar(paste(x))),
+    pad = " ",
+    preserve_na = FALSE
 ){
   diff <- pmax(width - nchar(paste(x)), 0L)
   padding <-
@@ -798,11 +798,11 @@ pad_right <- function(
 
 
 preview_object <- function(
-  x,
-  width = 32,
-  brackets = c("(", ")"),
-  quotes   = c("`", "`"),
-  dots = ".."
+    x,
+    width = 32,
+    brackets = c("(", ")"),
+    quotes   = c("`", "`"),
+    dots = ".."
 ){
   if (is.function(x)){
     fmls <- names(formals(x))
@@ -960,8 +960,8 @@ dupes <- function(x, ...){
 #' @noRd
 #'
 #' @examples
-#' camelCase("foo_bar")
-camelCase <- function(x, sep_pattern = "_|\\s"){
+#' camel_case("foo_bar")
+camel_case <- function(x, sep_pattern = "_|\\s"){
   assert(is.character(x))
   assert(is_scalar_character(sep_pattern))
   substr(x, 1, 1) <- tolower(substr(x, 1, 1))
@@ -996,6 +996,45 @@ camelCase <- function(x, sep_pattern = "_|\\s"){
 
 
 
+
+#' @noRd
+pascal_case <- function(x, sep_pattern = "_|\\s"){
+  x <- camel_case(x, sep_pattern = sep_pattern)
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x
+}
+
+
+
+
+#' @noRd
+names_to_pascal_case <- function(x, sep_pattern = "_|\\s"){
+  n <- pascal_case(names(x))
+
+  if (inherits(x, "data.table") && requireNamespace("data.table")){
+    data.table::setnames(x, n)
+    return(x)
+  }
+
+  names(x) <- n
+  x
+}
+
+
+#' @noRd
+names_to_camel_case <- function(x, sep_pattern = "_|\\s"){
+  n <- camel_case(names(x))
+
+  if (inherits(x, "data.table") && requireNamespace("data.table")){
+    data.table::setnames(x, n)
+    return(x)
+  }
+
+  names(x) <- n
+  n
+}
+
+
 #' Create description string for listlike R objects Rd documentation
 #'
 #' **EXPERIMENTAL**
@@ -1007,8 +1046,8 @@ rd_describe_str <- function(x){
   types <- paste0("`", vapply(x, class_fmt, character(1)), "`")
 
   cat(paste0("\\describe{\n",
-    paste0("  \\item{", paste(names(x), types), "}{ }", collapse = "\n"),
-    "\n}"))
+             paste0("  \\item{", paste(names(x), types), "}{ }", collapse = "\n"),
+             "\n}"))
 }
 
 
@@ -1110,8 +1149,8 @@ validate <- function(
 #'   )
 #' )
 assert_all <- function(
-  ...,
-  call = sys.call(-1)
+    ...,
+    call = sys.call(-1)
 ){
 
   conds <- unlist(list(...))

@@ -202,7 +202,7 @@ test_that("camelCase works as expected", {
     "PascalCase_TestString3")
 
   expect_identical(
-    camelCase(pascalCaseStrings),
+    camel_case(pascalCaseStrings),
     c("pascalCaseTestString", "pascalCaseTestString2", "pascalCaseTestString3"))
 
 
@@ -211,7 +211,7 @@ test_that("camelCase works as expected", {
     "_snake_case_test_string_2_")
 
   expect_identical(
-    camelCase(snake_case_test_strings),
+    camel_case(snake_case_test_strings),
     c("snakeCaseTestString", "snakeCaseTestString2"))
 
 
@@ -220,7 +220,7 @@ test_that("camelCase works as expected", {
     "spaced    test  string \n 2")
 
   expect_identical(
-    camelCase(spaced_test_strings),
+    camel_case(spaced_test_strings),
     c("spacedTestString", "spacedTestString2"))
 
 
@@ -229,9 +229,49 @@ test_that("camelCase works as expected", {
     "mixed CaseTest_String2")
 
   expect_identical(
-    camelCase(mixed_case_test_strings),
+    camel_case(mixed_case_test_strings),
     c("mixedCaseTestString", "mixedCaseTestString2"))
 
 })
 
 
+
+
+test_that("PascalCase works as expected", {
+
+  camelCaseStrings <- c(
+    "camelCaseTestString",
+    "camelCaseTestString2",
+    "camelCase_TestString3")
+
+  expect_identical(
+    pascal_case(camelCaseStrings),
+    c("CamelCaseTestString", "CamelCaseTestString2", "CamelCaseTestString3"))
+
+
+  snake_case_test_strings <- c(
+    "snake_case_test_string",
+    "_snake_case_test_string_2_")
+
+  expect_identical(
+    pascal_case(snake_case_test_strings),
+    c("SnakeCaseTestString", "SnakeCaseTestString2"))
+
+
+  spaced_test_strings <- c(
+    "spaced test string",
+    "spaced    test  string \n 2")
+
+  expect_identical(
+    pascal_case(spaced_test_strings),
+    c("SpacedTestString", "SpacedTestString2"))
+
+
+  mixed_case_test_strings <- c(
+    "mixed caseTest_String",
+    "mixed CaseTest_String2")
+
+  expect_identical(
+    pascal_case(mixed_case_test_strings),
+    c("MixedCaseTestString", "MixedCaseTestString2"))
+})

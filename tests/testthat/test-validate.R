@@ -62,7 +62,8 @@ test_that("validate warns if an expressions evaluates to non-bool", {
 
   res <- expect_warning(validate(
     Petals = all(iris$Petal.Length == 5),
-    Species = iris$Species %in% iris$Species
+    Species = iris$Species %in% iris$Species,
+    .all = FALSE
   ), regexp = ".*Species.*does not evaluate")
 
   expect_true(!any(res))
